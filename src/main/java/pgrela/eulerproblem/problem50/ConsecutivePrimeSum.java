@@ -24,24 +24,14 @@ public class ConsecutivePrimeSum implements EulerSolver {
         int maxLengthFor = 0;
         int sum;
         int sumTo;
-        int nextSum = 0;
         for (int sumFrom = 0; sumFrom < primes.length; sumFrom++) {
-            if(sumFrom==0)
-                nextSum=0;
-            else {
-                if(sumFrom+maxLength>primes.length){
-                    break;
-                }
-                nextSum = nextSum - primes[sumFrom - 1] + primes[sumFrom + maxLength - 1];
-            }
-            sum = nextSum;
-            sumTo = sumFrom + maxLength;
+            sum = 0;
+            sumTo = sumFrom;
             while (sum < ONE_MILLION && sumTo < primes.length) {
                 if (primesSet.contains(sum)) {
                     if (sumTo - sumFrom > maxLength) {
                         maxLength = sumTo - sumFrom;
                         maxLengthFor = sum;
-                        nextSum = sum;
                     }
                 }
                 sum += primes[sumTo++];

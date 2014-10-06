@@ -27,7 +27,10 @@ public class Integers {
         return Arrays.equals(aDigits, bDigits);
     }
 
-    private static int[] toDigitArray(int number, int length) {
+    public static int[] toDigitArray(int number) {
+        return toDigitArray(number, length(number));
+    }
+    public static int[] toDigitArray(int number, int length) {
         int[] aDigits = new int[length];
         for (int i = 0; i < length; i++) {
             aDigits[i] = number % 10;
