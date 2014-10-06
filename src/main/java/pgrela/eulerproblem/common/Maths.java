@@ -1,8 +1,8 @@
 package pgrela.eulerproblem.common;
 
-import java.util.stream.LongStream;
-
 import static pgrela.eulerproblem.common.Longs.safalyMultiplyModulo;
+
+import java.util.stream.LongStream;
 
 public class Maths {
 
@@ -52,6 +52,28 @@ public class Maths {
                 return true;
             }
             int nextDigit = number / multiplier % base;
+            low += nextDigit * multiplier;
+            high *= base;
+            if (low + high == number) {
+                return true;
+            }
+            multiplier *= base;
+            high = high * base + nextDigit * multiplier;
+        }
+        return false;
+    }
+    public static boolean isPalindrome(long number, int base) {
+        if (number % base == 0) {
+            return false;
+        }
+        long multiplier = 1;
+        long low = 0;
+        long high = 0;
+        while (low + high <= number) {
+            if (low + high == number) {
+                return true;
+            }
+            long nextDigit = number / multiplier % base;
             low += nextDigit * multiplier;
             high *= base;
             if (low + high == number) {

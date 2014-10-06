@@ -1,7 +1,8 @@
 package pgrela.eulerproblem.problem53;
 
-import static java.util.stream.IntStream.iterate;
-import static java.util.stream.IntStream.rangeClosed;
+import static java.util.stream.IntStream.concat;
+import static java.util.stream.IntStream.of;
+import static pgrela.eulerproblem.common.Integers.ONE_MILLION;
 import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
 
 import java.util.stream.IntStream;
@@ -15,13 +16,16 @@ public class CombinatoricSelections implements EulerSolver {
     }
 
     public long solve() {
-        return iterate(1, i -> i + 1).filter(k -> rangeClosed(2, 6).allMatch(i -> arePermutations(k, k * i))).findFirst().getAsInt();
-    }
-
-    private boolean arePermutations(int a, int b) {
-        int[] digits = new int[10];
-        while(a>0){++digits[a%10];a/=10;}
-        while(b>0){--digits[b%10];b/=10;}
-        return IntStream.of(digits).allMatch(i->i==0);
+        int[] a = new int[102];
+        a[a.length - 1] = 1;
+        IntStream stream = of(0);
+        for (int i = 1; i <= 100; i++) {
+            for (int j = 0; j < a.length - 1; j++) {
+                int value = a[j + 1] + a[j];
+                a[j] = value > ONE_MILLION ? ONE_MILLION + 1 : value;
+            }
+            stream = concat(stream, of(a.clone()));
+        }
+        return stream.filter(i -> i > ONE_MILLION).count();
     }
 }

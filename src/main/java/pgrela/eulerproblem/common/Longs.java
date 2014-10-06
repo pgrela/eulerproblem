@@ -6,7 +6,7 @@ public class Longs {
     }
 
     public static long safalyMultiplyModulo(long a, long b, long modulo) {
-        long k=1000*1000*100;
+        long k = 1000 * 1000 * 100;
         long aLow = a % k;
         long bLow = b % k;
         long aHigh = a / k;
@@ -16,6 +16,15 @@ public class Longs {
                         + (aLow * bHigh) % modulo * k % modulo
                         + (aHigh * bLow) % modulo * k % modulo
                         + (aLow * bLow % modulo)
-        )%modulo;
+        ) % modulo;
+    }
+
+    public static long reverse(long n) {
+        long r = 0;
+        while (n > 0) {
+            r = r * 10 + n % 10;
+            n /= 10;
+        }
+        return r;
     }
 }

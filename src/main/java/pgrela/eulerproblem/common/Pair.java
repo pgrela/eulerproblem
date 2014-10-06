@@ -11,4 +11,8 @@ public class Pair {
     public static Pair pair(int a, int b) {
         return new Pair(a, b);
     }
+    @Override
+    public String toString() {
+        return "[" + a + "," + b + "]";
+    }
 }

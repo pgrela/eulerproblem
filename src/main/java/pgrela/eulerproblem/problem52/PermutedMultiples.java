@@ -1,9 +1,10 @@
 package pgrela.eulerproblem.problem52;
 
-import static pgrela.eulerproblem.common.Integers.ONE_MILLION;
+import static java.util.stream.IntStream.iterate;
+import static java.util.stream.IntStream.rangeClosed;
 import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
 
-import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import pgrela.eulerproblem.common.EulerSolver;
 
@@ -14,16 +15,13 @@ public class PermutedMultiples implements EulerSolver {
     }
 
     public long solve() {
-        int[][] a=new int[100][102];
-        a[0][0]=1;
-        a[0][1]=1;
-        for (int i = 1; i < a.length; i++) {
-            a[i][0]=1;
-            for (int j = 1; j < a[i].length; j++) {
-                int value = a[i - 1][j - 1] + a[i - 1][j];
-                a[i][j] = value > ONE_MILLION ? ONE_MILLION + 1 : value;
-            }
-        }
-        return Arrays.stream(a).flatMapToInt(Arrays::stream).filter(i->i>ONE_MILLION).count();
+        return iterate(1, i -> i + 1).filter(k -> rangeClosed(2, 6).allMatch(i -> arePermutations(k, k * i))).findFirst().getAsInt();
+    }
+
+    private boolean arePermutations(int a, int b) {
+        int[] digits = new int[10];
+        while(a>0){++digits[a%10];a/=10;}
+        while(b>0){--digits[b%10];b/=10;}
+        return IntStream.of(digits).allMatch(i->i==0);
     }
 }
