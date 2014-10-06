@@ -1,13 +1,14 @@
 package pgrela.eulerproblem.problem27;
 
-import pgrela.eulerproblem.common.Coordinates;
-import pgrela.eulerproblem.common.EulerSolver;
-import pgrela.eulerproblem.common.Primes;
+import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
+import pgrela.eulerproblem.common.Coordinates;
+import pgrela.eulerproblem.common.EulerSolver;
+import pgrela.eulerproblem.common.Integers;
+import pgrela.eulerproblem.common.Primes;
 
 public class QuadraticPrimes implements EulerSolver {
 
@@ -15,7 +16,7 @@ public class QuadraticPrimes implements EulerSolver {
         printSolution(QuadraticPrimes.class);
     }
 
-    Set<Integer> primes = Primes.primes(1000000).boxed().collect(Collectors.toSet());
+    Set<Integer> primes = Primes.primes(Integers.ONE_MILLION).boxed().collect(Collectors.toSet());
 
     @Override
     public long solve() {

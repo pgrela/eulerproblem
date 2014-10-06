@@ -3,6 +3,8 @@ package pgrela.eulerproblem.common;
 import java.util.Arrays;
 
 public class Integers {
+    public static final int ONE_MILLION = 1000000;
+
     public static int multiply(int a, int b) {
         return a * b;
     }

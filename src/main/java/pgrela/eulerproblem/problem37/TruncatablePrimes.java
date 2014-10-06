@@ -17,9 +17,9 @@ public class TruncatablePrimes implements EulerSolver {
     }
 
     public long solve() {
-        Set<Integer> primes = Primes.primes(1000000).boxed().collect(Collectors.toSet());
+        Set<Integer> primes = Primes.primes(Integers.ONE_MILLION).boxed().collect(Collectors.toSet());
 
-        return range(10, 1000000).filter(
+        return range(10, Integers.ONE_MILLION).filter(
                 p -> streamFrom(p).of(n -> n / 10).until(n -> n > 0).stream().allMatch(primes::contains)
         ).filter(
                 p -> streamFrom(p).of(n -> n % pow(10, length(n) - 1)).until(n -> n > 0).stream().allMatch(primes::contains)

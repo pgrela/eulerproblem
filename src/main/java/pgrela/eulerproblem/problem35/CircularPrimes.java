@@ -22,7 +22,7 @@ public class CircularPrimes implements EulerSolver {
 
     @Override
     public long solve() {
-        Set<Integer> primes = Primes.primes(1000000).boxed().collect(Collectors.toSet());
+        Set<Integer> primes = Primes.primes(Integers.ONE_MILLION).boxed().collect(Collectors.toSet());
         return primes.stream().sequential().filter(p -> rotationsStream(p).allMatch(primes::contains)).count();
     }
 
