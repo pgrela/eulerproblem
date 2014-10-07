@@ -27,4 +27,31 @@ public class Longs {
         }
         return r;
     }
+
+
+    public static long fromDigitArray(int[] digits){
+        long r=0;
+        for (int digit : digits) {
+            r = r * 10 + digit;
+        }
+        return r;
+    }
+
+    public static int[] toDigitArray(long number) {
+        return toDigitArray(number, length(number));
+    }
+    public static int[] toDigitArray(long number, int length) {
+        int[] aDigits = new int[length];
+        for (int i = 0; i < length; i++) {
+            aDigits[i] = (int)number % 10;
+            number /= 10;
+        }
+        return aDigits;
+    }
+
+    public static int length(long n) {
+        int length = 1;
+        while ((n /= 10) > 0) ++length;
+        return length;
+    }
 }

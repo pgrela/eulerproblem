@@ -27,6 +27,14 @@ public class Integers {
         return Arrays.equals(aDigits, bDigits);
     }
 
+    public static int fromDigitArray(int[] digits){
+        int r=0;
+        for (int i = 0; i < digits.length; i++) {
+            r=r*10+digits[i];
+        }
+        return r;
+    }
+
     public static int[] toDigitArray(int number) {
         return toDigitArray(number, length(number));
     }
