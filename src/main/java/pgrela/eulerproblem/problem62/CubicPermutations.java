@@ -1,12 +1,12 @@
 package pgrela.eulerproblem.problem62;
 
+import static java.util.stream.LongStream.iterate;
 import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.LongStream;
 
 import pgrela.eulerproblem.common.EulerSolver;
 
@@ -19,15 +19,16 @@ public class CubicPermutations implements EulerSolver {
     }
 
     public String solveToString() {
+        //The solution shows, that you don't need BigDecimals to do this, previous code in VCS needs to be reviewed
         Map<ComparableCharArray, Integer> counter = new HashMap<>();
-        ComparableCharArray winner = LongStream.range(0, LONG).sequential()
+        ComparableCharArray winner = iterate(1, i -> i + 1)
                 .mapToObj(i -> BigDecimal.valueOf(i).pow(3))
                 .map(ComparableCharArray::new)
                 .peek(i -> counter.put(i, counter.getOrDefault(i, 0) + 1))
                 .filter(i -> counter.get(i) == 5)
                 .findFirst().get();
 
-        return LongStream.range(0, LONG)
+        return iterate(1, i -> i + 1)
                 .mapToObj(i -> BigDecimal.valueOf(i).pow(3))
                 .filter(i -> new ComparableCharArray(i).equals(winner))
                 .findFirst().get().toString();
