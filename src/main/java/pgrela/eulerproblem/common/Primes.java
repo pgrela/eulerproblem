@@ -3,6 +3,8 @@ package pgrela.eulerproblem.common;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.stream.IntStream.of;
@@ -10,6 +12,7 @@ import static java.util.stream.IntStream.rangeClosed;
 
 public class Primes {
     private static int[] primesUpTo100000 = null;
+    private static Set<Integer> primesSetUpTo100000 = null;
 
     public static IntStream primes(int maxPrime) {
         BitSet set = new BitSet();
@@ -36,6 +39,8 @@ public class Primes {
 
     public static boolean isPrime(int n) {
         int[] primes = getPrimesToFactorizeInteger();
+        if(n<primes[primes.length-1])
+            return getSetOfPrimesToFactorizeInteger().contains(n);
         for (int prime : primes) {
             if (n % prime == 0) {
                 return false;
@@ -45,6 +50,13 @@ public class Primes {
             }
         }
         return false;
+    }
+
+    private static Set<Integer> getSetOfPrimesToFactorizeInteger() {
+        if (primesSetUpTo100000==null) {
+            primesSetUpTo100000 = IntStream.of(getPrimesToFactorizeInteger()).boxed().collect(Collectors.toSet());
+        }
+        return primesSetUpTo100000;
     }
 
     public static List<Integer> factorize(int n) {
