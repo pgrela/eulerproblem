@@ -1,8 +1,8 @@
 package pgrela.eulerproblem.common;
 
-import static pgrela.eulerproblem.common.Longs.safalyMultiplyModulo;
-
 import java.util.stream.LongStream;
+
+import static pgrela.eulerproblem.common.Longs.safalyMultiplyModulo;
 
 public class Maths {
 
@@ -62,6 +62,7 @@ public class Maths {
         }
         return false;
     }
+
     public static boolean isPalindrome(long number, int base) {
         if (number % base == 0) {
             return false;
@@ -103,5 +104,9 @@ public class Maths {
             return 1L;
         long numberSquared = powMod(safalyMultiplyModulo(number, number, modulo), exponent / 2, modulo);
         return exponent % 2L == 0L ? numberSquared : safalyMultiplyModulo(numberSquared, number, modulo);
+    }
+
+    public static long gcd(long a, long b) {
+        return b == 0 ? a : gcd(b, a % b);
     }
 }

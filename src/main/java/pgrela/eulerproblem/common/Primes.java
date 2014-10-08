@@ -39,7 +39,7 @@ public class Primes {
 
     public static boolean isPrime(int n) {
         int[] primes = getPrimesToFactorizeInteger();
-        if(n<primes[primes.length-1])
+        if (n < primes[primes.length - 1])
             return getSetOfPrimesToFactorizeInteger().contains(n);
         for (int prime : primes) {
             if (n % prime == 0) {
@@ -53,22 +53,23 @@ public class Primes {
     }
 
     private static Set<Integer> getSetOfPrimesToFactorizeInteger() {
-        if (primesSetUpTo100000==null) {
+        if (primesSetUpTo100000 == null) {
             primesSetUpTo100000 = IntStream.of(getPrimesToFactorizeInteger()).boxed().collect(Collectors.toSet());
         }
         return primesSetUpTo100000;
     }
 
     public static List<Integer> factorize(int n) {
-        int[] primes = getPrimesToFactorizeInteger();
         List<Integer> primeFactors = new ArrayList<>();
+        if (n < 1) return primeFactors;
+        int[] primes = getPrimesToFactorizeInteger();
         for (int prime : primes) {
             while (n % prime == 0) {
                 primeFactors.add(prime);
                 n /= prime;
             }
             if (prime * prime > n) {
-                if(n!=1){
+                if (n != 1) {
                     primeFactors.add(n);
                 }
                 return primeFactors;
