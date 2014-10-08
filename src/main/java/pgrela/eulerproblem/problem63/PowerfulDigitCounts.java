@@ -1,9 +1,9 @@
 package pgrela.eulerproblem.problem63;
 
-import pgrela.eulerproblem.common.EulerSolver;
-
 import static java.util.stream.LongStream.range;
 import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
+
+import pgrela.eulerproblem.common.EulerSolver;
 
 public class PowerfulDigitCounts implements EulerSolver {
 
