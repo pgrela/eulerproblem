@@ -3,18 +3,18 @@ package pgrela.eulerproblem.problem483;
 import pgrela.eulerproblem.common.EulerSolver;
 import pgrela.eulerproblem.common.Maths;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.Math.pow;
 import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
 
 public class RepeatedPermutation implements EulerSolver {
     public static final int MAX_ALLOWED_LENGTH = 400;
-    public static final int DEFAULT_LENGTH = 20;
+    public static final int DEFAULT_LENGTH = 170;
 
     public static void main(String[] args) {
         printSolution(RepeatedPermutation.class);
@@ -22,10 +22,11 @@ public class RepeatedPermutation implements EulerSolver {
 
     public String solveToString() {
         c = 0;
-        double v = calculateWithMaximalCycle(length, length, 1);
+        BigDecimal bigDecimal = calculateWithMaximalCycle(length, length, 1);
+        double v = bigDecimal.doubleValue()/(factorials[length]).doubleValue();
         String format = DECIMAL_FORMATTER.format(
-                v / factorials[length]);
-        System.out.println(v);
+                v);
+        System.out.println(bigDecimal);
         System.out.println(c);
         double f = Double.MIN_VALUE;
         return format;
@@ -33,44 +34,46 @@ public class RepeatedPermutation implements EulerSolver {
 
     int c = 0;
 
-    private double calculateWithMaximalCycle(int length, int maximalCycleLength, long lcm) {
+    private BigDecimal calculateWithMaximalCycle(int length, int maximalCycleLength, long lcm) {
         ++c;
         if (length == 0) {
-            return pow(lcm, 2);
+            return BigDecimal.valueOf(lcm).pow(2);
         }
         if (maximalCycleLength < 2) {
-            return pow(lcm, 2);
+            return BigDecimal.valueOf(lcm).pow(2);
         }
         long queryLCM = maximalLCM[maximalCycleLength].gcdWith(lcm).toLong();
         assert queryLCM > 0;
         double remainingToSquare = lcm / queryLCM;
         assert remainingToSquare > 0;
         if (cache.get(length).get(maximalCycleLength).containsKey(queryLCM)) {
-            return cache.get(length).get(maximalCycleLength).get(queryLCM) * remainingToSquare * remainingToSquare;
+            BigDecimal remaining = BigDecimal.valueOf(remainingToSquare);
+            return cache.get(length).get(maximalCycleLength).get(queryLCM).multiply(remaining).multiply(remaining);
         }
         if (queryLCM != lcm) {
-            return calculateWithMaximalCycle(length, maximalCycleLength, queryLCM) * remainingToSquare * remainingToSquare;
+            BigDecimal remaining = BigDecimal.valueOf(remainingToSquare);
+            return calculateWithMaximalCycle(length, maximalCycleLength, queryLCM).multiply(remaining).multiply(remaining);
         }
 
         int howManyMaximalCyclesCanFitIn = length / maximalCycleLength;
-        double sum = calculateWithMaximalCycle(length, maximalCycleLength - 1, lcm);
-        double waysOfChoosingCycleOrder = factorials[maximalCycleLength - 1];
+        BigDecimal sum = calculateWithMaximalCycle(length, maximalCycleLength - 1, lcm);
+        BigDecimal waysOfChoosingCycleOrder = factorials[maximalCycleLength - 1];
         long lcmWithMCL = Maths.lcm(lcm, maximalCycleLength);
         for (int i = 1; i <= howManyMaximalCyclesCanFitIn; i++) {
-            double waysOfChoosingNGroupsOfMaximalCycleLengthFromLengthTotal = factorials[length] / factorials[length - i * maximalCycleLength] / pow(
-                    factorials[maximalCycleLength], i) / factorials[i];
-            double possibilitiesInMaximalCycles = waysOfChoosingNGroupsOfMaximalCycleLengthFromLengthTotal * pow(
-                    waysOfChoosingCycleOrder, i);
-            sum += possibilitiesInMaximalCycles * calculateWithMaximalCycle(length - i * maximalCycleLength, maximalCycleLength - 1, lcmWithMCL);
+            BigDecimal waysOfChoosingNGroupsOfMaximalCycleLengthFromLengthTotal = factorials[length]
+                    .divide(factorials[length - i * maximalCycleLength])
+                    .divide(factorials[maximalCycleLength].pow(i)).divide(factorials[i]);
+            BigDecimal possibilitiesInMaximalCycles = waysOfChoosingNGroupsOfMaximalCycleLengthFromLengthTotal.multiply(waysOfChoosingCycleOrder.pow(i));
+            sum=sum.add(possibilitiesInMaximalCycles.multiply(calculateWithMaximalCycle(length - i * maximalCycleLength, maximalCycleLength - 1, lcmWithMCL)));
         }
         cache.get(length).get(maximalCycleLength).put(lcm, sum);
         return sum;
     }
 
     public static DecimalFormat DECIMAL_FORMATTER;
-    private ArrayList<ArrayList<Map<Long, Double>>> cache;
+    private ArrayList<ArrayList<Map<Long, BigDecimal>>> cache;
     private LowestCommonMultiple[] maximalLCM = new LowestCommonMultiple[MAX_ALLOWED_LENGTH + 1];
-    private final double[] factorials;
+    private final BigDecimal[] factorials;
 
     static {
         DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
@@ -93,11 +96,11 @@ public class RepeatedPermutation implements EulerSolver {
         precomputeMaximalLCMs(length);
     }
 
-    private double[] precomputeFactorials(int length) {
-        double[] factorials = new double[length];
-        factorials[0] = 1.0;
+    private BigDecimal[] precomputeFactorials(int length) {
+        BigDecimal[] factorials = new BigDecimal[length];
+        factorials[0] = BigDecimal.ONE;
         for (int i = 1; i < factorials.length; i++) {
-            factorials[i] = factorials[i - 1] * i;
+            factorials[i] = factorials[i - 1].multiply(BigDecimal.valueOf(i));
         }
         return factorials;
     }
