@@ -1,8 +1,9 @@
 package pgrela.eulerproblem.problem483;
 
-import java.util.Arrays;
-
+import pgrela.eulerproblem.common.Maths;
 import pgrela.eulerproblem.common.Primes;
+
+import java.util.Arrays;
 
 public class LowestCommonMultiple {
 
@@ -15,7 +16,7 @@ public class LowestCommonMultiple {
     private static LowestCommonMultiple[] INSTANCES;
 
     static{
-        FACTORS_INDICES = new int[RepeatedPermutation.MAX_ALLOWED_LENGTH];
+        FACTORS_INDICES = new int[RepeatedPermutationSingleCache.MAX_ALLOWED_LENGTH];
         PRIMES = Primes.primes(FACTORS_INDICES.length).toArray();
         for (int i = 0; i < PRIMES.length; i++) {
             FACTORS_INDICES[PRIMES[i]] = i;
@@ -29,31 +30,44 @@ public class LowestCommonMultiple {
         this.factors = factors;
     }
 
-    public static LowestCommonMultiple toLCM(int n){
+    public static LowestCommonMultiple toLCM(long n){
         if(INSTANCES==null){
-            INSTANCES = new LowestCommonMultiple[RepeatedPermutation.MAX_ALLOWED_LENGTH+1];
-            for (int j = 0; j <= RepeatedPermutation.MAX_ALLOWED_LENGTH; j++) {
+            INSTANCES = new LowestCommonMultiple[RepeatedPermutationSingleCache.MAX_ALLOWED_LENGTH+1];
+            for (int j = 0; j <= RepeatedPermutationSingleCache.MAX_ALLOWED_LENGTH; j++) {
                 INSTANCES[j]=new LowestCommonMultiple(j);
             }
         }
-        if(n<= RepeatedPermutation.MAX_ALLOWED_LENGTH)
-            return INSTANCES[n].clone();
+        if(n<= RepeatedPermutationSingleCache.MAX_ALLOWED_LENGTH)
+            return INSTANCES[(int)n].clone();
         return new LowestCommonMultiple(n);
     }
 
-    private LowestCommonMultiple(int i) {
+    private LowestCommonMultiple(long i) {
         factors = new int[SIZE_PRIME_INDEX];
-        for (int k : Primes.factorize(i)) {
+        for (int k : Primes.factorizeLikeInt(i)) {
             factors[FACTORS_INDICES[k]]++;
         }
     }
 
-    public LowestCommonMultiple getCommonWith(int n) {
+    public LowestCommonMultiple lcmWith(long n) {
         LowestCommonMultiple lcm = toLCM(n);
-        return getCommonWith(lcm);
+        return lcmWith(lcm);
     }
 
-    public LowestCommonMultiple getCommonWith(LowestCommonMultiple lowestCommonMultiple) {
+    public LowestCommonMultiple gcdWith(long n) {
+        LowestCommonMultiple lcm = toLCM(n);
+        return gcdWith(lcm);
+    }
+
+    private LowestCommonMultiple gcdWith(LowestCommonMultiple lowestCommonMultiple) {
+        LowestCommonMultiple lcm=lowestCommonMultiple.clone();
+        for (int i = 0; i < SIZE_PRIME_INDEX; i++) {
+            lcm.factors[i] = Math.min(factors[i], lcm.factors[i]);
+        }
+        return lcm;
+    }
+
+    public LowestCommonMultiple lcmWith(LowestCommonMultiple lowestCommonMultiple) {
         LowestCommonMultiple lcm=lowestCommonMultiple.clone();
         for (int i = 0; i < SIZE_PRIME_INDEX; i++) {
             lcm.factors[i] = Math.max(factors[i], lcm.factors[i]);
@@ -78,6 +92,16 @@ public class LowestCommonMultiple {
         for (int i = 0; i < SIZE_PRIME_INDEX; i++) {
             if (factors[i] == 0) continue;
             value *= Math.pow(PRIMES[i], factors[i]);
+        }
+        return value;
+    }
+
+    public long toLong() {
+        long value = 1;
+        for (int i = 0; i < SIZE_PRIME_INDEX; i++) {
+            if (factors[i] == 0) continue;
+            value *= Maths.pow(PRIMES[i], factors[i]);
+            assert value>0;
         }
         return value;
     }

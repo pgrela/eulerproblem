@@ -141,7 +141,7 @@ public class RepeatedPermutationByPrimes implements EulerSolver {
         int quantity = 0;
         LowestCommonMultiple lowestCommonMultiple = LowestCommonMultiple.toLCM(1);
         for (int cycle : cycleLengths.cycleLengths) {
-            lowestCommonMultiple = lowestCommonMultiple.getCommonWith(LowestCommonMultiple.toLCM(cycle));
+            lowestCommonMultiple = lowestCommonMultiple.lcmWith(LowestCommonMultiple.toLCM(cycle));
             if (previous == cycle) ++quantity;
             else {
                 d *= countCycles(totalLength, previous, quantity);

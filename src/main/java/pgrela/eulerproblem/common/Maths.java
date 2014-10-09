@@ -109,4 +109,8 @@ public class Maths {
     public static long gcd(long a, long b) {
         return b == 0 ? a : gcd(b, a % b);
     }
+
+    public static long lcm(long a, long b) {
+        return (a / Maths.gcd(a, b)) * b;
+    }
 }

@@ -1,13 +1,12 @@
 package pgrela.eulerproblem.problem483;
 
-import static org.assertj.core.api.BDDAssertions.then;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import pgrela.eulerproblem.common.EulerSolver;
+
+import static org.assertj.core.api.BDDAssertions.then;
 
 @RunWith(JUnitParamsRunner.class)
 public class RepeatedPermutationTest {

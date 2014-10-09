@@ -98,4 +98,25 @@ public class Primes {
         }
         return d.sum() - originalNumber;
     }
+
+    public static List<Integer> factorizeLikeInt(long n) {
+
+        List<Integer> primeFactors = new ArrayList<>();
+        if (n < 1) return primeFactors;
+        int[] primes = getPrimesToFactorizeInteger();
+        for (int prime : primes) {
+            while (n % prime == 0) {
+                primeFactors.add(prime);
+                n /= prime;
+            }
+            if (prime * prime > n) {
+                if (n != 1) {
+                    primeFactors.add((int)n);
+                }
+                return primeFactors;
+            }
+        }
+        return primeFactors;
+
+    }
 }
