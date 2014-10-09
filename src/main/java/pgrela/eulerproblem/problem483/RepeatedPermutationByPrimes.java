@@ -74,12 +74,13 @@ public class RepeatedPermutationByPrimes implements EulerSolver {
                 if (cyclesLengths[i] == 0) break;
                 if (!alreadyProcessedValues.contains(cyclesLengths[i])) {
                     //if fits in length
-                    int newRamainingLength = remainingLength + cyclesLengths[i] * (primes[currentPrime] - 1);
+                    int newRamainingLength = remainingLength - cyclesLengths[i] * (primes[currentPrime] - 1);
                     if (newRamainingLength >= 0) {
                         cyclesLengths[i] *= primes[currentPrime];
                         d += extendSpecificCycleLengths(characteristic, cyclesLengths, remainingLength, currentPrime);
                         cyclesLengths[i] /= primes[currentPrime];
                     }
+                    alreadyProcessedValues.add(cyclesLengths[i]);
                 }
             }
             int i = 0;
