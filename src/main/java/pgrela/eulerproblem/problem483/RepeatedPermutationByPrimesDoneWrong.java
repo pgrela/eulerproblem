@@ -12,13 +12,13 @@ import java.util.Set;
 import pgrela.eulerproblem.common.EulerSolver;
 import pgrela.eulerproblem.common.Primes;
 
-public class RepeatedPermutationByPrimes implements EulerSolver {
+public class RepeatedPermutationByPrimesDoneWrong implements EulerSolver {
     public static final int MAX_ALLOWED_LENGTH = 351;
-    public static final int DEFAULT_LENGTH = 30;
+    public static final int DEFAULT_LENGTH = 5;
     private int[] primes;
 
     public static void main(String[] args) {
-        printSolution(RepeatedPermutationByPrimes.class);
+        printSolution(RepeatedPermutationByPrimesDoneWrong.class);
     }
 
     public String solveToString() {
@@ -52,7 +52,7 @@ public class RepeatedPermutationByPrimes implements EulerSolver {
     private double valueForGivenCharacteristic(int[] characteristic, int totalLength, double value) {
         double d;
         int[] cyclesLengths = new int[of(characteristic).sum()];
-        d = extendSpecificCycleLengths(characteristic, cyclesLengths, totalLength, 0);
+        d = value * value * extendSpecificCycleLengths(characteristic, cyclesLengths, totalLength, 0);
         return d;
     }
 
@@ -75,8 +75,7 @@ public class RepeatedPermutationByPrimes implements EulerSolver {
                     int newRemainingLength = remainingLength - cyclesLengths[i] * (primes[currentPrime] - 1);
                     if (newRemainingLength >= 0) {
                         cyclesLengths[i] *= primes[currentPrime];
-                        d += extendSpecificCycleLengths(characteristic, cyclesLengths, newRemainingLength,
-                                currentPrime);
+                        d += extendSpecificCycleLengths(characteristic, cyclesLengths, remainingLength, currentPrime);
                         cyclesLengths[i] /= primes[currentPrime];
                     }
 
@@ -139,9 +138,7 @@ public class RepeatedPermutationByPrimes implements EulerSolver {
         double d = 1;
         int previous = cycleLengths.cycleLengths[0];
         int quantity = 0;
-        LowestCommonMultiple lowestCommonMultiple = LowestCommonMultiple.toLCM(1);
         for (int cycle : cycleLengths.cycleLengths) {
-            lowestCommonMultiple = lowestCommonMultiple.getCommonWith(LowestCommonMultiple.toLCM(cycle));
             if (previous == cycle) ++quantity;
             else {
                 d *= countCycles(totalLength, previous, quantity);
@@ -151,13 +148,12 @@ public class RepeatedPermutationByPrimes implements EulerSolver {
                 quantity = 1;
             }
         }
-        double lcm=lowestCommonMultiple.toDouble();
-        d*= countCycles(totalLength, previous, quantity)*lcm*lcm;
+        d*= countCycles(totalLength, previous, quantity);
         return d;
     }
 
     protected double countCycles(int permutationLength, int cycleLength, int quantity) {
-        return Math.pow(factorials[cycleLength - 1],quantity)
+        return factorials[cycleLength - 1]
                 * (factorials[permutationLength] / factorials[permutationLength - quantity * cycleLength])
                 / factorials[quantity]
                 / Math.pow(factorials[cycleLength], quantity);
@@ -176,11 +172,11 @@ public class RepeatedPermutationByPrimes implements EulerSolver {
 
     private final double[] factorials;
 
-    public RepeatedPermutationByPrimes() {
+    public RepeatedPermutationByPrimesDoneWrong() {
         this(DEFAULT_LENGTH);
     }
 
-    public RepeatedPermutationByPrimes(int length) {
+    public RepeatedPermutationByPrimesDoneWrong(int length) {
         this.length = length;
 
         factorials = precomputeFactorials();

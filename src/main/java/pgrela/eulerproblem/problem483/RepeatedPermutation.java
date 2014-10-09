@@ -1,14 +1,14 @@
 package pgrela.eulerproblem.problem483;
 
-import pgrela.eulerproblem.common.EulerSolver;
+import static java.lang.Math.pow;
+import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
+import static pgrela.eulerproblem.problem483.LowestCommonMultiple.toLCM;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
 
-import static java.lang.Math.pow;
-import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
-import static pgrela.eulerproblem.problem483.LowestCommonMultiple.toLCM;
+import pgrela.eulerproblem.common.EulerSolver;
 
 public class RepeatedPermutation implements EulerSolver {
     public static final int MAX_ALLOWED_LENGTH=400;
@@ -20,9 +20,10 @@ public class RepeatedPermutation implements EulerSolver {
 
     public String solveToString() {
         c=0;
+        double v = calculateWithMaximalCycle(length, length, toLCM(1));
         String format = DECIMAL_FORMATTER.format(
-                calculateWithMaximalCycle(length, length, toLCM(1)) / factorials[length]);
-        System.out.println(c);
+                v / factorials[length]);
+        //System.out.println(v);
         return format;
     }
 

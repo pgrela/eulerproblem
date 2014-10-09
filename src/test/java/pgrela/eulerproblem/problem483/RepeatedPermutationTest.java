@@ -1,12 +1,13 @@
 package pgrela.eulerproblem.problem483;
 
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
+import static org.assertj.core.api.BDDAssertions.then;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import pgrela.eulerproblem.common.EulerSolver;
 
-import static org.assertj.core.api.BDDAssertions.then;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import pgrela.eulerproblem.common.EulerSolver;
 
 @RunWith(JUnitParamsRunner.class)
 public class RepeatedPermutationTest {
@@ -18,12 +19,12 @@ public class RepeatedPermutationTest {
             "20,5.106136147e3"
     })
     public void shouldSolveTestCasesFromExampleOnWeb(int length, String expectedValue) {
-        //given
-        EulerSolver solver = new RepeatedPermutation(length);
+            //given
+            EulerSolver solver = new RepeatedPermutation(length);
 
-        //when
-        String value = solver.solveToString();
+            //when
+            String value = solver.solveToString();
 
-        then(value).isEqualTo(expectedValue);
+            then(value).isEqualTo(expectedValue);
     }
 }

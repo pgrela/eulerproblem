@@ -1,12 +1,13 @@
 package pgrela.eulerproblem.problem39;
 
+import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
+
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import pgrela.eulerproblem.common.Coordinates;
 import pgrela.eulerproblem.common.EulerSolver;
 import pgrela.eulerproblem.common.Maths;
-
-import java.util.stream.Collectors;
-
-import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
 
 public class IntegerRightTriangles implements EulerSolver {
 
@@ -20,9 +21,9 @@ public class IntegerRightTriangles implements EulerSolver {
                 .filter(p -> Maths.isSquare(p.x * p.x + p.y * p.y))
                 .collect(Collectors.toMap(p -> p.x + p.y + Maths.intSqrt(p.x * p.x + p.y * p.y), (k) -> 1, (a, b) -> a + b))
                 .entrySet().stream()
-                .filter(e -> ((Integer) e.getKey()) <= 1000)
+                .filter(e -> e.getKey() <= 1000)
                 .max((a, b) -> Integer.compare(a.getValue(), b.getValue()))
-                .map(e -> (Integer) e.getKey()).get();
+                .map(Map.Entry::getKey).get();
     }
 
 

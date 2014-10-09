@@ -1,11 +1,11 @@
 package pgrela.eulerproblem.problem45;
 
+import static org.assertj.core.api.BDDAssertions.then;
+
 import org.junit.Test;
+
 import pgrela.eulerproblem.common.ClassFactory;
 import pgrela.eulerproblem.common.EulerSolver;
-import pgrela.eulerproblem.problem44.PentagonNumbers;
-
-import static org.assertj.core.api.BDDAssertions.then;
 
 public class TriangularPentagonalAndHexagonalTest {
 
