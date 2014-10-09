@@ -1,14 +1,14 @@
 package pgrela.eulerproblem.problem483;
 
-import static java.lang.Math.pow;
-import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
-import static pgrela.eulerproblem.problem483.LowestCommonMultiple.toLCM;
+import pgrela.eulerproblem.common.EulerSolver;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
 
-import pgrela.eulerproblem.common.EulerSolver;
+import static java.lang.Math.pow;
+import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
+import static pgrela.eulerproblem.problem483.LowestCommonMultiple.toLCM;
 
 public class RepeatedPermutation implements EulerSolver {
     public static final int MAX_ALLOWED_LENGTH=400;
@@ -107,7 +107,7 @@ public class RepeatedPermutation implements EulerSolver {
     private LowestCommonMultiple getLCM(int cachedLength, int maximalCycle) {
         LowestCommonMultiple lcm = toLCM(1);
         for (int i = 2; i <= maximalCycle; i++) {
-            lcm = lcm.getCommonWith(LowestCommonMultiple.toPoweredLCM(i, cachedLength / i));
+            lcm = lcm.getCommonWith(LowestCommonMultiple.toPoweredLCM(i, 1));
         }
         maxLCMsValues[cachedLength][maximalCycle] = lcm.toDouble();
         maxLCMs[cachedLength][maximalCycle] = lcm;
