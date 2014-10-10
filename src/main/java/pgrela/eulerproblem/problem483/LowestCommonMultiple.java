@@ -13,10 +13,12 @@ public class LowestCommonMultiple {
 
     public static int[] PRIMES;
 
-    private static LowestCommonMultiple[] INSTANCES;
+    private static LowestCommonMultiple[] CACHED_INSTANCES;
 
-    static{
-        FACTORS_INDICES = new int[RepeatedPermutationSingleCache.MAX_ALLOWED_LENGTH];
+    private static int MAX_ALLOWED_LENGTH = RepeatedPermutation.MAX_ALLOWED_LENGTH+1;
+
+    static {
+        FACTORS_INDICES = new int[MAX_ALLOWED_LENGTH+1];
         PRIMES = Primes.primes(FACTORS_INDICES.length).toArray();
         for (int i = 0; i < PRIMES.length; i++) {
             FACTORS_INDICES[PRIMES[i]] = i;
@@ -30,21 +32,21 @@ public class LowestCommonMultiple {
         this.factors = factors;
     }
 
-    public static LowestCommonMultiple toLCM(long n){
-        if(INSTANCES==null){
-            INSTANCES = new LowestCommonMultiple[RepeatedPermutationSingleCache.MAX_ALLOWED_LENGTH+1];
-            for (int j = 0; j <= RepeatedPermutationSingleCache.MAX_ALLOWED_LENGTH; j++) {
-                INSTANCES[j]=new LowestCommonMultiple(j);
+    public static LowestCommonMultiple toLCM(long n) {
+        if (CACHED_INSTANCES == null) {
+            CACHED_INSTANCES = new LowestCommonMultiple[MAX_ALLOWED_LENGTH + 1];
+            for (int j = 0; j <= MAX_ALLOWED_LENGTH; j++) {
+                CACHED_INSTANCES[j] = new LowestCommonMultiple(j);
             }
         }
-        if(n<= RepeatedPermutationSingleCache.MAX_ALLOWED_LENGTH)
-            return INSTANCES[(int)n].clone();
+        if (n <= MAX_ALLOWED_LENGTH)
+            return CACHED_INSTANCES[(int) n].clone();
         return new LowestCommonMultiple(n);
     }
 
-    private LowestCommonMultiple(long i) {
+    private LowestCommonMultiple(long n) {
         factors = new int[SIZE_PRIME_INDEX];
-        for (int k : Primes.factorizeLikeInt(i)) {
+        for (int k : Primes.factorizeLikeInt(n)) {
             factors[FACTORS_INDICES[k]]++;
         }
     }
@@ -60,7 +62,7 @@ public class LowestCommonMultiple {
     }
 
     private LowestCommonMultiple gcdWith(LowestCommonMultiple lowestCommonMultiple) {
-        LowestCommonMultiple lcm=lowestCommonMultiple.clone();
+        LowestCommonMultiple lcm = lowestCommonMultiple.clone();
         for (int i = 0; i < SIZE_PRIME_INDEX; i++) {
             lcm.factors[i] = Math.min(factors[i], lcm.factors[i]);
         }
@@ -68,7 +70,7 @@ public class LowestCommonMultiple {
     }
 
     public LowestCommonMultiple lcmWith(LowestCommonMultiple lowestCommonMultiple) {
-        LowestCommonMultiple lcm=lowestCommonMultiple.clone();
+        LowestCommonMultiple lcm = lowestCommonMultiple.clone();
         for (int i = 0; i < SIZE_PRIME_INDEX; i++) {
             lcm.factors[i] = Math.max(factors[i], lcm.factors[i]);
         }
@@ -76,24 +78,8 @@ public class LowestCommonMultiple {
 
     }
 
-    public LowestCommonMultiple clone(){
-        return new LowestCommonMultiple(Arrays.copyOf(factors,factors.length));
-    }
-
-    public boolean isDominatedBy(LowestCommonMultiple other) {
-        for (int i = 0; i < factors.length; i++) {
-            if (factors[i] > other.factors[i]) return false;
-        }
-        return true;
-    }
-
-    public double toDouble() {
-        double value = 1;
-        for (int i = 0; i < SIZE_PRIME_INDEX; i++) {
-            if (factors[i] == 0) continue;
-            value *= Math.pow(PRIMES[i], factors[i]);
-        }
-        return value;
+    public LowestCommonMultiple clone() {
+        return new LowestCommonMultiple(Arrays.copyOf(factors, factors.length));
     }
 
     public long toLong() {
@@ -101,37 +87,12 @@ public class LowestCommonMultiple {
         for (int i = 0; i < SIZE_PRIME_INDEX; i++) {
             if (factors[i] == 0) continue;
             value *= Maths.pow(PRIMES[i], factors[i]);
-            assert value>0;
         }
         return value;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        LowestCommonMultiple that = (LowestCommonMultiple) o;
-
-        return Arrays.equals(factors, that.factors);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(factors);
-    }
-
-    @Override
     public String toString() {
         return "LowestCommonMultiple{" + "factors=" + Arrays.toString(factors) + '}';
-    }
-
-    public static LowestCommonMultiple toPoweredLCM(int n, int exponent) {
-        LowestCommonMultiple lcm = toLCM(n);
-        for (int i = 0; i < lcm.factors.length; i++) {
-            lcm.factors[i]*=exponent;
-        }
-        return lcm;
     }
 }

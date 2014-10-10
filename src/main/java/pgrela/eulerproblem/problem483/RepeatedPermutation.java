@@ -1,127 +1,128 @@
 package pgrela.eulerproblem.problem483;
 
+import mikera.data.BigDouble;
 import pgrela.eulerproblem.common.EulerSolver;
 import pgrela.eulerproblem.common.Maths;
 
-import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static mikera.data.BigDouble.ONE;
+import static mikera.data.BigDouble.valueOf;
 import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
 
 public class RepeatedPermutation implements EulerSolver {
-    public static final int MAX_ALLOWED_LENGTH = 400;
-    public static final int DEFAULT_LENGTH = 200;
+    public static final int MAX_ALLOWED_LENGTH = 350;
 
     public static void main(String[] args) {
         printSolution(RepeatedPermutation.class);
     }
 
     public String solveToString() {
-        c = 0;
-        BigInteger bi = calculateWithMaximalCycle(length, length, 1);
-        //double v = bi.doubleValue()/(factorials[length]).doubleValue();
-        BigInteger v=bi.divide(factorials[length]);
-        String format = DECIMAL_FORMATTER.format(
-                v);
-        System.out.println(bi);
-        System.out.println(c);
-        double f = Double.MIN_VALUE;
-        return format;
+        return solveToString(MAX_ALLOWED_LENGTH);
     }
 
-    int c = 0;
+    public String solveToString(int length) {
+        return DECIMAL_FORMATTER.format(calculateWithMaximalCycle(length, length, 1).divide(factorials[length]));
+    }
 
-    private BigInteger calculateWithMaximalCycle(int length, int maximalCycleLength, long lcm) {
-        ++c;
-        if (length == 0) {
-            return BigInteger.valueOf(lcm).pow(2);
+    public BigDouble calculateWithMaximalCycle(int remainingPermutationLength, int maximalAllowedCycleLength, long inheritedLCM) {
+        if (remainingPermutationLength == 0 || maximalAllowedCycleLength < 2) {
+            return valueOf(inheritedLCM).pow(2);
         }
-        if (maximalCycleLength < 2) {
-            return BigInteger.valueOf(lcm).pow(2);
+        long queryLCM = MAXIMAL_LCM[maximalAllowedCycleLength].gcdWith(inheritedLCM).toLong();
+        if (isCached(remainingPermutationLength, maximalAllowedCycleLength, queryLCM)) {
+            BigDouble value = getFromCache(remainingPermutationLength, maximalAllowedCycleLength, queryLCM);
+            return applyRemainingFactors(value, inheritedLCM, queryLCM);
         }
-        long queryLCM = maximalLCM[maximalCycleLength].gcdWith(lcm).toLong();
-        assert queryLCM > 0;
-        long remainingToSquare = lcm / queryLCM;
-        assert remainingToSquare > 0;
-        if (cache.get(length).get(maximalCycleLength).containsKey(queryLCM)) {
-            BigInteger remaining = BigInteger.valueOf(remainingToSquare);
-            return cache.get(length).get(maximalCycleLength).get(queryLCM).multiply(remaining).multiply(remaining);
-        }
-        if (queryLCM != lcm) {
-            BigInteger remaining = BigInteger.valueOf(remainingToSquare);
-            return calculateWithMaximalCycle(length, maximalCycleLength, queryLCM).multiply(remaining).multiply(remaining);
+        if (shouldBeCached(inheritedLCM, queryLCM)) {
+
+            BigDouble value = calculateWithMaximalCycle(remainingPermutationLength, maximalAllowedCycleLength, queryLCM);
+            return applyRemainingFactors(value, inheritedLCM, queryLCM);
         }
 
-        int howManyMaximalCyclesCanFitIn = length / maximalCycleLength;
-        BigInteger sum = calculateWithMaximalCycle(length, maximalCycleLength - 1, lcm);
-        BigInteger waysOfChoosingCycleOrder = factorials[maximalCycleLength - 1];
-        long lcmWithMCL = Maths.lcm(lcm, maximalCycleLength);
+        int howManyMaximalCyclesCanFitIn = remainingPermutationLength / maximalAllowedCycleLength;
+        BigDouble sum = calculateWithMaximalCycle(remainingPermutationLength, maximalAllowedCycleLength - 1, inheritedLCM);
+        BigDouble waysOfChoosingCycleOrder = factorials[maximalAllowedCycleLength - 1];
+        long lcmWithMCL = Maths.lcm(inheritedLCM, maximalAllowedCycleLength);
         for (int i = 1; i <= howManyMaximalCyclesCanFitIn; i++) {
-            BigInteger waysOfChoosingNGroupsOfMaximalCycleLengthFromLengthTotal = factorials[length]
-                    .divide(factorials[length - i * maximalCycleLength])
-                    .divide(factorials[maximalCycleLength].pow(i)).divide(factorials[i]);
-            BigInteger possibilitiesInMaximalCycles = waysOfChoosingNGroupsOfMaximalCycleLengthFromLengthTotal.multiply(waysOfChoosingCycleOrder.pow(i));
-            sum=sum.add(possibilitiesInMaximalCycles.multiply(calculateWithMaximalCycle(length - i * maximalCycleLength, maximalCycleLength - 1, lcmWithMCL)));
+            BigDouble waysOfChoosingNGroupsOfMaximalCycleLengthFromLengthTotal = factorials[remainingPermutationLength]
+                    .divide(factorials[remainingPermutationLength - i * maximalAllowedCycleLength])
+                    .divide(factorials[maximalAllowedCycleLength].pow(i))
+                    .divide(factorials[i]);
+            BigDouble possibilitiesInMaximalCycles = waysOfChoosingNGroupsOfMaximalCycleLengthFromLengthTotal.multiply(waysOfChoosingCycleOrder.pow(i));
+            sum=sum.add(possibilitiesInMaximalCycles.multiply(calculateWithMaximalCycle(remainingPermutationLength - i * maximalAllowedCycleLength, maximalAllowedCycleLength - 1, lcmWithMCL)));
         }
-        cache.get(length).get(maximalCycleLength).put(lcm, sum);
+        cache.get(remainingPermutationLength).get(maximalAllowedCycleLength).put(inheritedLCM, sum);
         return sum;
     }
 
+    private BigDouble applyRemainingFactors(BigDouble value, long inheritedLCM, long queryLCM) {
+        return value.multiply(valueOf(inheritedLCM / queryLCM).pow(2));
+    }
+
+    private BigDouble getFromCache(int remainingPermutationLength, int maximalAllowedCycleLength, long queryLCM) {
+        return cache.get(remainingPermutationLength).get(maximalAllowedCycleLength).get(queryLCM);
+    }
+
+    private boolean isCached(int remainingPermutationLength, int maximalAllowedCycleLength, long lcm) {
+        return cache.get(remainingPermutationLength).get(maximalAllowedCycleLength).containsKey(lcm);
+    }
+
+    private boolean shouldBeCached(long inheritedLCM, long queryLCM) {
+        return queryLCM != inheritedLCM;
+    }
+
     public static DecimalFormat DECIMAL_FORMATTER;
-    private ArrayList<ArrayList<Map<Long, BigInteger>>> cache;
-    private LowestCommonMultiple[] maximalLCM = new LowestCommonMultiple[MAX_ALLOWED_LENGTH + 1];
-    private final BigInteger[] factorials;
+    private static final List<List<Map<Long, BigDouble>>> cache;
+    private static final LowestCommonMultiple[] MAXIMAL_LCM;;
+    private static final BigDouble[] factorials;
 
     static {
         DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
         decimalFormatSymbols.setDecimalSeparator('.');
         decimalFormatSymbols.setExponentSeparator("e");
         DECIMAL_FORMATTER = new DecimalFormat("#.#########E0", decimalFormatSymbols);
+        MAXIMAL_LCM = precomputedMaximalLCMs(MAX_ALLOWED_LENGTH);
+        cache = createCacheStructure(MAX_ALLOWED_LENGTH);
+        factorials = precomputedFactorials(MAX_ALLOWED_LENGTH + 1);
     }
-
-    public final int length;
 
     public RepeatedPermutation() {
-        this(DEFAULT_LENGTH);
     }
 
-    public RepeatedPermutation(int length) {
-        this.length = length;
-
-        factorials = precomputeFactorials(length + 1);
-        createCacheStructure(length);
-        precomputeMaximalLCMs(length);
-    }
-
-    private BigInteger[] precomputeFactorials(int length) {
-        BigInteger[] factorials = new BigInteger[length];
-        factorials[0] = BigInteger.ONE;
+    private static BigDouble[] precomputedFactorials(int length) {
+        BigDouble[] factorials = new BigDouble[length];
+        factorials[0] = ONE;
         for (int i = 1; i < factorials.length; i++) {
-            factorials[i] = factorials[i - 1].multiply(BigInteger.valueOf(i));
+            factorials[i] = factorials[i - 1].multiply(valueOf(i));
         }
         return factorials;
     }
 
-    private void createCacheStructure(int length) {
-        cache = new ArrayList<>(length + 1);
+    private static LowestCommonMultiple[] precomputedMaximalLCMs(int length) {
+        LowestCommonMultiple[] maximalLCMs = new LowestCommonMultiple[MAX_ALLOWED_LENGTH + 1];
+        maximalLCMs[0] = LowestCommonMultiple.toLCM(1);
+        for (int i = 1; i <= length; i++) {
+            maximalLCMs[i] = maximalLCMs[i - 1].lcmWith(i);
+        }
+        return  maximalLCMs;
+    }
+
+
+    private static List<List<Map<Long, BigDouble>>> createCacheStructure(int length) {
+        List<List<Map<Long, BigDouble>>> cache = new ArrayList<>(length + 1);
         for (int i = 0; i <= length; i++) {
             cache.add(i, new ArrayList<>(length + 1));
             for (int j = 0; j <= length; j++) {
                 cache.get(i).add(j, new HashMap<>());
             }
         }
-    }
-
-
-    private void precomputeMaximalLCMs(int length) {
-        maximalLCM[0] = LowestCommonMultiple.toLCM(1);
-        for (int i = 1; i <= length; i++) {
-            maximalLCM[i] = maximalLCM[i - 1].lcmWith(i);
-        }
+        return cache;
     }
 }
 
