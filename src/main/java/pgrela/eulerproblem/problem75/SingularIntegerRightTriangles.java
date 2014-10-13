@@ -17,11 +17,11 @@ public class SingularIntegerRightTriangles implements EulerSolver {
         int[] s = new int[limit + 1];
         range(1, 1000)
                 .forEach(m -> range(1, m)
-                        .filter(n -> (m & n & 1)  == 0)
+                        .filter(n -> (m & n & 1) == 0)
                         .filter(n -> Maths.gcd(m, n) == 1)
                         .map(n -> 2 * m * (m + n))
-                        .forEach(p -> rangeClosed(1, limit / p)
-                                .forEach(k -> s[k * p]++)
+                        .forEach(perimeter -> rangeClosed(1, limit / perimeter)
+                                .forEach(nonTrivial -> s[nonTrivial * perimeter]++)
                         )
                 );
         return of(s).filter(i -> i == 1).count();
