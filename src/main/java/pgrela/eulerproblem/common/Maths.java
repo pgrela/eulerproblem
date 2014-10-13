@@ -1,8 +1,11 @@
 package pgrela.eulerproblem.common;
 
+import java.util.List;
 import java.util.stream.LongStream;
 
 import static pgrela.eulerproblem.common.Longs.safalyMultiplyModulo;
+import static pgrela.eulerproblem.common.Primes.factorize;
+import static pgrela.eulerproblem.common.Primes.factorizeLikeInt;
 
 public class Maths {
 
@@ -106,11 +109,28 @@ public class Maths {
         return exponent % 2L == 0L ? numberSquared : safalyMultiplyModulo(numberSquared, number, modulo);
     }
 
+    public static int gcd(int a, int b) {
+        return b == 0 ? a : gcd(b, a % b);
+    }
+
     public static long gcd(long a, long b) {
         return b == 0 ? a : gcd(b, a % b);
     }
 
     public static long lcm(long a, long b) {
         return (a / Maths.gcd(a, b)) * b;
+    }
+
+    public static boolean isSquare(long n) {
+        return pow((long) Math.sqrt(n), 2) == n;
+    }
+
+    public static int totient(int n) {
+        List<Integer> f = factorize(n);
+        return n / f.stream().distinct().reduce(1, (a, b) -> a * b) * f.stream().distinct().sequential().map(i -> i - 1).reduce(1, (a, b) -> a * b);
+    }
+    public static int totientLikeInt(long n) {
+        List<Integer> f = factorizeLikeInt(n);
+        return (int)(n / f.stream().distinct().reduce(1, (a, b) -> a * b) * f.stream().distinct().sequential().map(i -> i - 1).reduce(1, (a, b) -> a * b));
     }
 }

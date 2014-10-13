@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import static java.util.stream.IntStream.of;
 import static java.util.stream.IntStream.rangeClosed;
@@ -80,7 +81,10 @@ public class Primes {
     }
 
     public static int sumDivisors(int number) {
-        int originalNumber = number;
+        return allDivisors(number).sum() - number;
+    }
+
+    public static IntStream allDivisors(int number) {
         IntStream d = of(1);
         for (int prime : getPrimesToFactorizeUpTo100000()) {
             int times = 0;
@@ -96,7 +100,26 @@ public class Primes {
                 break;
             }
         }
-        return d.sum() - originalNumber;
+        return d;
+    }
+
+    public static LongStream allDivisors(long number) {
+        LongStream divisors = LongStream.of(1);
+        for (int prime : getPrimesToFactorizeUpTo100000()) {
+            int times = 0;
+            while (number % prime == 0) {
+                number /= prime;
+                ++times;
+            }
+            if (times > 0) {
+                final int finalTimes = times;
+                divisors = divisors.flatMap(i -> LongStream.rangeClosed(0, finalTimes).map(e -> i * Maths.pow(prime, e)));
+            }
+            if (number == 1) {
+                break;
+            }
+        }
+        return divisors;
     }
 
     public static List<Integer> factorizeLikeInt(long n) {

@@ -1,6 +1,6 @@
 package pgrela.eulerproblem.common;
 
-import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class Integers {
     public static final int ONE_MILLION = 1000000;
@@ -16,21 +16,22 @@ public class Integers {
     }
 
     public static boolean arePermutations(int a, int b) {
-        int length = Integers.length(a);
-        if (length != Integers.length(b)) {
-            return false;
+        int[] digits = new int[10];
+        while (a > 0) {
+            digits[a % 10]++;
+            a /= 10;
         }
-        int[] aDigits = toDigitArray(a, length);
-        int[] bDigits = toDigitArray(b, length);
-        Arrays.sort(aDigits);
-        Arrays.sort(bDigits);
-        return Arrays.equals(aDigits, bDigits);
+        while (b > 0) {
+            digits[b % 10]--;
+            b /= 10;
+        }
+        return IntStream.of(digits).allMatch(i -> i == 0);
     }
 
-    public static int fromDigitArray(int[] digits){
-        int r=0;
+    public static int fromDigitArray(int[] digits) {
+        int r = 0;
         for (int i = 0; i < digits.length; i++) {
-            r=r*10+digits[i];
+            r = r * 10 + digits[i];
         }
         return r;
     }
@@ -38,6 +39,7 @@ public class Integers {
     public static int[] toDigitArray(int number) {
         return toDigitArray(number, length(number));
     }
+
     public static int[] toDigitArray(int number, int length) {
         int[] aDigits = new int[length];
         for (int i = 0; i < length; i++) {

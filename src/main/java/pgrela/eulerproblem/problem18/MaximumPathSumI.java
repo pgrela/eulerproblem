@@ -31,13 +31,20 @@ public class MaximumPathSumI implements EulerSolver {
             {4, 62, 98, 27, 23, 9, 70, 98, 73, 93, 38, 53, 60, 4, 23}
     };
 
-    public long solve() {
-        int[][] max = Stream.of(THE_TRIANGLE).map(a -> a.clone()).peek(a -> Arrays.fill(a, 0)).toArray(int[][]::new);
-        max[0][0] = THE_TRIANGLE[0][0];
-        for (int i = 1; i < THE_TRIANGLE.length; i++) {
-            for (int j = 0; j < THE_TRIANGLE[i - 1].length; j++) {
-                max[i][j] = Math.max(max[i][j], max[i - 1][j] + THE_TRIANGLE[i][j]);
-                max[i][j + 1] = Math.max(max[i][j + 1], max[i - 1][j] + THE_TRIANGLE[i][j + 1]);
+    public long solve(){
+        return solve(THE_TRIANGLE);
+    }
+
+    public static long solve(int[][] theTriangle) {
+        int[][] max = Stream.of(theTriangle)
+                .map(a -> a.clone())
+                .peek(a -> Arrays.fill(a, 0))
+                .toArray(int[][]::new);
+        max[0][0] = theTriangle[0][0];
+        for (int i = 1; i < theTriangle.length; i++) {
+            for (int j = 0; j < theTriangle[i - 1].length; j++) {
+                max[i][j] = Math.max(max[i][j], max[i - 1][j] + theTriangle[i][j]);
+                max[i][j + 1] = Math.max(max[i][j + 1], max[i - 1][j] + theTriangle[i][j + 1]);
             }
         }
         return IntStream.of(max[max.length - 1]).max().getAsInt();
