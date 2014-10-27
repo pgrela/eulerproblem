@@ -1,10 +1,10 @@
 package pgrela.eulerproblem.problem78;
 
-import pgrela.eulerproblem.common.EulerSolver;
+import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
 
 import java.util.stream.IntStream;
 
-import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
+import pgrela.eulerproblem.common.EulerSolver;
 
 public class CoinPartitions implements EulerSolver {
 

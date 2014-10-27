@@ -1,12 +1,11 @@
 package pgrela.eulerproblem.problem18;
 
-import pgrela.eulerproblem.common.EulerSolver;
-
-import java.util.Arrays;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
-
+import static pgrela.eulerproblem.common.Arrays.copyArrayStructureAndFillWith;
 import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
+
+import java.util.stream.IntStream;
+
+import pgrela.eulerproblem.common.EulerSolver;
 
 public class MaximumPathSumI implements EulerSolver {
     public static void main(String[] args) {
@@ -36,10 +35,7 @@ public class MaximumPathSumI implements EulerSolver {
     }
 
     public static long solve(int[][] theTriangle) {
-        int[][] max = Stream.of(theTriangle)
-                .map(a -> a.clone())
-                .peek(a -> Arrays.fill(a, 0))
-                .toArray(int[][]::new);
+        int[][] max = copyArrayStructureAndFillWith(theTriangle, 0);
         max[0][0] = theTriangle[0][0];
         for (int i = 1; i < theTriangle.length; i++) {
             for (int j = 0; j < theTriangle[i - 1].length; j++) {
