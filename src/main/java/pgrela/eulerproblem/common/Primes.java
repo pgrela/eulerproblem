@@ -1,5 +1,8 @@
 package pgrela.eulerproblem.common;
 
+import static java.util.stream.IntStream.of;
+import static java.util.stream.IntStream.rangeClosed;
+
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
@@ -7,9 +10,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
-
-import static java.util.stream.IntStream.of;
-import static java.util.stream.IntStream.rangeClosed;
 
 public class Primes {
     private static int[] primesUpTo100000 = null;
@@ -85,8 +85,11 @@ public class Primes {
     }
 
     public static IntStream allDivisors(int number) {
+        return allDivisors(number, getPrimesToFactorizeUpTo100000());
+    }
+    public static IntStream allDivisors(int number, int[] primes) {
         IntStream d = of(1);
-        for (int prime : getPrimesToFactorizeUpTo100000()) {
+        for (int prime : primes) {
             int times = 0;
             while (number % prime == 0) {
                 number /= prime;

@@ -50,7 +50,7 @@ public class LargestProductInAGrid implements EulerSolver {
                 (p, i) -> point(p.x + i, p.y),
                 (p, i) -> point(p.x - i, p.y + i)
         ).map(
-                next -> Coordinates.squareFrom00(19)
+                next -> Coordinates.squareFrom00WithSideLength(19)
                         .map(p -> range(0, 4).mapToObj(i -> next.apply(p, i)))
                         .map(line -> line.map(getValueByPoint).reduce(1, Integers::multiply))
                         .reduce(0, Integer::max)

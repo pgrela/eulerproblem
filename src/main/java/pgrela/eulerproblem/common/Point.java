@@ -1,6 +1,7 @@
 package pgrela.eulerproblem.common;
 
 public class Point {
+    public static Point POINT_00 = new Point(0,0);
     public int x, y;
 
     public Point(int x, int y) {

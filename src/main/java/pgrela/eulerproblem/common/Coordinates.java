@@ -6,7 +6,7 @@ import static java.util.stream.IntStream.rangeClosed;
 import static pgrela.eulerproblem.common.Point.point;
 
 public class Coordinates {
-    public static Stream<Point> squareFrom00(int maxXYCoord) {
+    public static Stream<Point> squareFrom00WithSideLength(int maxXYCoord) {
         return square(0, 0, maxXYCoord, maxXYCoord);
     }
 

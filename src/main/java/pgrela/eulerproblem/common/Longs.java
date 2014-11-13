@@ -1,6 +1,8 @@
 package pgrela.eulerproblem.common;
 
 public class Longs {
+    public static final long ONE_BILLION = 1000000000L;
+
     public static long multiply(long a, long b) {
         return a * b;
     }
