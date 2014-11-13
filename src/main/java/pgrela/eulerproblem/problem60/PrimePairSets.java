@@ -36,7 +36,7 @@ public class PrimePairSets implements EulerSolver {
         int numbers = 5;
         return BronKerbosch1(new TreeSet<>(), range(0, primes.length).boxed().collect(Collectors.toSet()), new TreeSet<>(), graph)
                 .filter(s->s.size()==numbers)
-                .mapToInt(s -> s.stream().mapToInt(i -> primes[i]).peek(System.out::println).sum())
+                .mapToInt(s -> s.stream().mapToInt(i -> primes[i]).sum())
                 .min().getAsInt();
     }
 

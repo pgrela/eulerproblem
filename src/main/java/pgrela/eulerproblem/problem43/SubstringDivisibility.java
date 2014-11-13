@@ -31,7 +31,6 @@ public class SubstringDivisibility implements EulerSolver {
                 .filter(list -> numberFromDigits(list, 6, 7, 8) % 13 == 0)
                 .filter(list -> numberFromDigits(list, 7, 8, 9) % 17 == 0)
                 .mapToLong(SubstringDivisibility::digitsToLong)
-                .peek(System.out::println)
                 .sum();
     }
 

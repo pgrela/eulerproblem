@@ -1,12 +1,6 @@
 package pgrela.eulerproblem.common;
 
-import static java.util.stream.IntStream.of;
-import static java.util.stream.IntStream.rangeClosed;
-
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -80,30 +74,56 @@ public class Primes {
 
     }
 
-    public static int sumDivisors(int number) {
-        return allDivisors(number).sum() - number;
-    }
-
     public static IntStream allDivisors(int number) {
         return allDivisors(number, getPrimesToFactorizeUpTo100000());
     }
+
+    public static int sumDivisors(int number) {
+        Map<Integer, Integer> primesCount = getPrimeFactorsHistogram(number, getPrimesToFactorizeUpTo100000());
+        int sum = 1;
+        for (Map.Entry<Integer, Integer> primeFactor : primesCount.entrySet()) {
+            int factor = primeFactor.getKey();
+            sum += sum*factor * ((Maths.pow(factor, primeFactor.getValue()) - 1) / (factor - 1));
+        }
+        return sum - number;
+    }
+
     public static IntStream allDivisors(int number, int[] primes) {
-        IntStream d = of(1);
+        Map<Integer, Integer> primesCount = getPrimeFactorsHistogram(number, primes);
+        List<Integer> factors = new ArrayList<>();
+        factors.add(1);
+        for (Map.Entry<Integer, Integer> primeFactor : primesCount.entrySet()) {
+            int factor = 1;
+            int processUpTo = factors.size();
+            for (int i = 0; i < primeFactor.getValue(); i++) {
+                factor *= primeFactor.getKey();
+                for (int j = 0; j < processUpTo; j++) {
+                    factors.add(factor * factors.get(j));
+                }
+            }
+        }
+        return factors.stream().mapToInt(i -> i);
+    }
+
+    private static Map<Integer, Integer> getPrimeFactorsHistogram(int number, int[] primes) {
+        Map<Integer, Integer> primesCount = new HashMap<>(10);
         for (int prime : primes) {
             int times = 0;
             while (number % prime == 0) {
                 number /= prime;
                 ++times;
             }
-            if (times > 0) {
-                final int finalTimes = times;
-                d = d.flatMap(i -> rangeClosed(0, finalTimes).map(e -> i * Maths.pow(prime, e)));
-            }
+            if(times>0)
+                primesCount.put(prime, times);
             if (number == 1) {
                 break;
             }
+            if (prime * prime > number) {
+                primesCount.put(number, 1);
+                break;
+            }
         }
-        return d;
+        return primesCount;
     }
 
     public static LongStream allDivisors(long number) {
@@ -137,7 +157,7 @@ public class Primes {
             }
             if (prime * prime > n) {
                 if (n != 1) {
-                    primeFactors.add((int)n);
+                    primeFactors.add((int) n);
                 }
                 return primeFactors;
             }

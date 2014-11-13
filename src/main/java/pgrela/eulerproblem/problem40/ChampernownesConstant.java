@@ -21,6 +21,6 @@ public class ChampernownesConstant implements EulerSolver {
         while (theNumber.length() < Integers.ONE_MILLION) {
             theNumber.append(++n);
         }
-        return IntStream.rangeClosed(0, 6).map(i -> Maths.pow(10, i)).map(i -> theNumber.charAt(i - 1) - '0').peek(System.out::println).reduce(1, Integers::multiply);
+        return IntStream.rangeClosed(0, 6).map(i -> Maths.pow(10, i)).map(i -> theNumber.charAt(i - 1) - '0').reduce(1, Integers::multiply);
     }
 }

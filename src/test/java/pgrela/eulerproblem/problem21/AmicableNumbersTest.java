@@ -31,9 +31,6 @@ public class AmicableNumbersTest {
             "220,284"
     })
     public void shouldComputeSumOfDivisors(int number, int sumOfDivisors) {
-        //given
-        AmicableNumbers solver = ClassFactory.getObjectOf(AmicableNumbers.class);
-
         //when
         int sum = Primes.sumDivisors(number);
 
