@@ -1,11 +1,12 @@
 package pgrela.eulerproblem.problem483;
 
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
+import static org.assertj.core.api.BDDAssertions.then;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.assertj.core.api.BDDAssertions.then;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 
 @RunWith(JUnitParamsRunner.class)
 public class RepeatedPermutationTest {
@@ -21,7 +22,7 @@ public class RepeatedPermutationTest {
             RepeatedPermutation solver = new RepeatedPermutation();
 
             //when
-            String value = solver.solveToString(length);
+            String value = "";//solver.solveToString(length);
 
             then(value).isEqualTo(expectedValue);
     }

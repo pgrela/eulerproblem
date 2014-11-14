@@ -1,22 +1,9 @@
 package pgrela.eulerproblem.problem483;
 
-import mikera.data.BigDouble;
 import pgrela.eulerproblem.common.EulerSolver;
-import pgrela.eulerproblem.common.Maths;
-
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static mikera.data.BigDouble.ONE;
-import static mikera.data.BigDouble.valueOf;
-import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
 
 public class RepeatedPermutation implements EulerSolver {
-    public static final int MAX_ALLOWED_LENGTH = 350;
+    public static final int MAX_ALLOWED_LENGTH = 350;/*
 
     public static void main(String[] args) {
         printSolution(RepeatedPermutation.class);
@@ -123,6 +110,6 @@ public class RepeatedPermutation implements EulerSolver {
             }
         }
         return cache;
-    }
+    }*/
 }
 

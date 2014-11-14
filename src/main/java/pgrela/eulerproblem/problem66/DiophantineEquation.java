@@ -1,10 +1,10 @@
 package pgrela.eulerproblem.problem66;
 
-import pgrela.eulerproblem.common.EulerSolver;
+import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
 
 import java.math.BigInteger;
 
-import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
+import pgrela.eulerproblem.common.EulerSolver;
 
 public class DiophantineEquation implements EulerSolver {
 
@@ -38,6 +38,7 @@ public class DiophantineEquation implements EulerSolver {
                 A1 = A2;
                 B1 = B2;
             }
+            System.out.println(A1.toString());
             if (A1.compareTo(maxX) == 1) {
                 maxX = A1;
                 maxD = D;
