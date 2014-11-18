@@ -1,16 +1,18 @@
 package pgrela.eulerproblem.problem95;
 
-import com.google.common.collect.Sets;
-import pgrela.eulerproblem.common.EulerSolver;
-import pgrela.eulerproblem.common.Primes;
-
-import java.util.TreeSet;
-
+import static com.google.common.collect.Sets.newTreeSet;
 import static java.lang.Integer.compare;
-import static java.util.stream.IntStream.*;
+import static java.util.stream.IntStream.concat;
+import static java.util.stream.IntStream.of;
+import static java.util.stream.IntStream.rangeClosed;
 import static pgrela.eulerproblem.common.Integers.ONE_MILLION;
 import static pgrela.eulerproblem.common.Pair.pair;
 import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
+
+import java.util.TreeSet;
+
+import pgrela.eulerproblem.common.EulerSolver;
+import pgrela.eulerproblem.common.Primes;
 
 public class AmicableChains implements EulerSolver {
 
@@ -19,10 +21,12 @@ public class AmicableChains implements EulerSolver {
     }
 
     public long solve() {
-        int[] divisorsSum = concat(of(0),rangeClosed(1,ONE_MILLION).parallel().map(Primes::sumDivisors)).toArray();
+        int[] divisorsSum = concat(of(0), rangeClosed(1,
+                ONE_MILLION).parallel().map(Primes::sumDivisors))
+                .toArray();
         return rangeClosed(2, ONE_MILLION).parallel()
                 .mapToObj(n -> {
-                    TreeSet<Integer> processed = Sets.newTreeSet();
+                    TreeSet<Integer> processed = newTreeSet();
                     int lastElement = n;
                     while (processed.add(lastElement)) {
                         lastElement = divisorsSum[lastElement];

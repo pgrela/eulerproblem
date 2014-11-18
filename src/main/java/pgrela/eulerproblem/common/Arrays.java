@@ -9,4 +9,12 @@ public class Arrays {
                 .peek(a -> java.util.Arrays.fill(a, fillWithValue))
                 .toArray(int[][]::new);
     }
+
+    public static void reverse(int[] integers) {
+        for (int i = 0; i < integers.length / 2; i++) {
+            int temporary = integers[i];
+            integers[i] = integers[integers.length - i - 1];
+            integers[integers.length - i - 1] = temporary;
+        }
+    }
 }
