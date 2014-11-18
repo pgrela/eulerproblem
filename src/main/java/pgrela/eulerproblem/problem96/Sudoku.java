@@ -4,6 +4,7 @@ import pgrela.eulerproblem.common.EulerSolver;
 import pgrela.eulerproblem.common.Files;
 
 import java.util.*;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
@@ -17,17 +18,23 @@ public class Sudoku implements EulerSolver {
 
     public long solve() {
         return Stream.of(Files.getFileAsString(RESOURCE_FILE).split("Grid [0-9]{2}"))
-                .filter(s -> !s.isEmpty()).skip(0)
+                .filter(s -> !s.isEmpty())
                 .map(this::to2DArray)
                 .map(this::solveSudoku)
-                .mapToInt(a -> a[0][6] * 100 + a[0][7] * 10 + a[0][8])
+                //.peek(a -> Stream.of(a).peek(s->System.out.println()).forEach(v -> IntStream.of(v).forEach(System.out::print)))
+                .mapToInt(a -> a[0][0] * 100 + a[0][1] * 10 + a[0][2])
                 .sum();
     }
 
     private int[][] solveSudoku(int[][] sudoku) {
         Board board = new Board(9, sudoku);
-        board.solve();
-        return board.getSolution();
+        if (board.solve()) {
+            int[][] solution = board.getSolution();
+            if (board.validateSolution(solution))
+                return solution;
+        }
+
+        throw new RuntimeException("SHIT!");
     }
 
     private int[][] to2DArray(String sudoku) {
@@ -47,7 +54,7 @@ public class Sudoku implements EulerSolver {
         public Field(Board board, int row, int column) {
             this.board = board;
             possibleOptions = board.getSize();
-            options = new boolean[possibleOptions+1];
+            options = new boolean[possibleOptions + 1];
             Arrays.fill(options, true);
         }
 
@@ -75,6 +82,8 @@ public class Sudoku implements EulerSolver {
         }
 
         private void fixValue(int value) {
+            possibleOptions=1;
+            if(this.value!=0 && this.value!=value){throw new RuntimeException();}
             this.value = value;
             board.markAsFixed(this);
         }
@@ -83,6 +92,14 @@ public class Sudoku implements EulerSolver {
             for (Group group : groups) {
                 group.fixField(this);
             }
+        }
+
+        public boolean hasOption(int option) {
+            return options[option];
+        }
+
+        public void setValue(int value) {
+            this.value = value;
         }
     }
 
@@ -95,7 +112,8 @@ public class Sudoku implements EulerSolver {
                 field.removeOption(aField.getValue());
             }
         }
-        public void addField(Field field){
+
+        public void addField(Field field) {
             optionalFields.add(field);
             field.assign(this);
         }
@@ -105,7 +123,9 @@ public class Sudoku implements EulerSolver {
         final int size;
         Field[][] fields;
         private Set<Field> fixedFields = new HashSet<>();
+        private Set<Field> optionFields = new HashSet<>();
         int optionalFields;
+        int[][] solution = null;
 
         public Board(int size, int[][] setup) {
             this.size = size;
@@ -114,6 +134,7 @@ public class Sudoku implements EulerSolver {
             for (int row = 0; row < size; row++) {
                 for (int column = 0; column < size; column++) {
                     fields[row][column] = new Field(this, row, column);
+                    optionFields.add(fields[row][column]);
                 }
             }
             for (int row = 0; row < size; row++) {
@@ -154,6 +175,7 @@ public class Sudoku implements EulerSolver {
 
         public void markAsFixed(Field field) {
             --optionalFields;
+            optionFields.remove(field);
             fixedFields.add(field);
         }
 
@@ -163,17 +185,67 @@ public class Sudoku implements EulerSolver {
                 fixedFields.remove(field);
                 field.removeOptionFromGroups();
             }
-            if (optionalFields > 0) {
-                //return makeAGuess();
+            if (optionalFields > 0 && !validateSolution(getSolution())) {
+                return makeAGuess();
+            }
+            if (!validateSolution(getSolution())) return false;
+            return true;
+        }
+
+        private boolean makeAGuess() {
+            if (optionFields.isEmpty()) {
+                return false;
+            }
+            Field guessingField = optionFields.iterator().next();
+            for (int option = 1; option <= size; option++) {
+                if (guessingField.hasOption(option)) {
+                    guessingField.setValue(option);
+                    Board newBoard = new Board(size, getSolution());
+                    if (newBoard.solve()) {
+                        int[][] solution = newBoard.getSolution();
+                        if (validateSolution(solution)) {
+                            this.solution = solution;
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public boolean validateSolution(int[][] solution) {
+            if (!Stream.of(solution).allMatch(a -> IntStream.of(a).filter(i -> i > 0).distinct().count() == 9))
+                return false;
+            for (int i = 0; i < size; i++) {
+                int[] a = new int[size];
+                for (int j = 0; j < size; j++) {
+                    a[j] = solution[j][i];
+                }
+                if (IntStream.of(a).filter(t -> t > 0).distinct().count() != 9) return false;
+            }
+            int squares = 3;
+            for (int i = 0; i < size; i += squares) {
+                for (int j = 0; j < size; j += squares) {
+                    ArrayList<Integer> a = new ArrayList<>();
+                    for (int k = 0; k < squares; k++) {
+                        for (int l = 0; l < squares; l++) {
+                            a.add(solution[i + k][j + l]);
+                        }
+                    }
+                    if (a.stream().filter(t -> t > 0).distinct().count() != 9) return false;
+                }
             }
             return true;
         }
 
         public int[][] getSolution() {
+            if (solution != null) {
+                return solution;
+            }
             int[][] solution = new int[size][size];
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    solution[i][j]=fields[i][j].getValue();
+                    solution[i][j] = fields[i][j].getValue();
                 }
             }
             return solution;

@@ -133,4 +133,8 @@ public class Maths {
         List<Integer> f = factorizeLikeInt(n);
         return (int)(n / f.stream().distinct().reduce(1, (a, b) -> a * b) * f.stream().distinct().sequential().map(i -> i - 1).reduce(1, (a, b) -> a * b));
     }
+
+    public static long longSqrt(long n) {
+        return (long) Math.sqrt(n);
+    }
 }
