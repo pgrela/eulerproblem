@@ -1,5 +1,6 @@
 
 apply plugin: 'java'
+//apply plugin: 'scala'
 apply plugin: 'idea'
 
 jar {
@@ -17,6 +18,32 @@ dependencies {
     compile 'com.google.guava:guava:18.0'
     compile 'net.mikera:mikera:1.6.0'
     compile 'com.googlecode.efficient-java-matrix-library:ejml:0.16'
+    compile "org.scala-lang:scala-library:2.10.4"
+    compile "org.scala-lang:scala-compiler:2.10.4"
     testCompile("org.assertj:assertj-core:1.6.1")
     testCompile("pl.pragmatists:JUnitParams:1.0.3")
+}
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src/main/scala']
+        }
+        java {
+            srcDirs = ['src/main/java']
+        }
+    }
+    test {
+        scala {
+            srcDirs = ['src/test/scala']
+        }
+        java {
+            srcDirs = ['src/test/java']
+        }
+    }
+}
+compileScala {
+    scalaCompileOptions.useCompileDaemon = true
+
+    // optionally specify host and port of the daemon:
+    scalaCompileOptions.daemonServer = "localhost:4243"
 }
