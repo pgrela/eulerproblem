@@ -31,8 +31,8 @@ public class Longs {
     }
 
 
-    public static long fromDigitArray(int[] digits){
-        long r=0;
+    public static long fromDigitArray(int[] digits) {
+        long r = 0;
         for (int digit : digits) {
             r = r * 10 + digit;
         }
@@ -42,10 +42,11 @@ public class Longs {
     public static int[] toDigitArray(long number) {
         return toDigitArray(number, length(number));
     }
+
     public static int[] toDigitArray(long number, int length) {
         int[] aDigits = new int[length];
         for (int i = 0; i < length; i++) {
-            aDigits[i] = (int)number % 10;
+            aDigits[i] = (int) number % 10;
             number /= 10;
         }
         return aDigits;
@@ -55,5 +56,13 @@ public class Longs {
         int length = 1;
         while ((n /= 10) > 0) ++length;
         return length;
+    }
+
+    public static int positiveBits(long n) {
+        int positive = 0;
+        do {
+            positive += n & 1;
+        } while ((n >>= 1) > 0);
+        return positive;
     }
 }

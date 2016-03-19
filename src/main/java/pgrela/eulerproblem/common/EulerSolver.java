@@ -1,12 +1,10 @@
 package pgrela.eulerproblem.common;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public interface EulerSolver {
-    public default long solve(){
-        throw new NotImplementedException();
+    default long solve(){
+        throw new RuntimeException("Not implemented");
     }
-    public default String solveToString(){
+    default String solveToString(){
         return String.valueOf(solve());
     }
 }

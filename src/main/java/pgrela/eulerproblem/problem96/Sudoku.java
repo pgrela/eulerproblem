@@ -188,8 +188,7 @@ public class Sudoku implements EulerSolver {
             if (optionalFields > 0 && !validateSolution(getSolution())) {
                 return makeAGuess();
             }
-            if (!validateSolution(getSolution())) return false;
-            return true;
+            return validateSolution(getSolution());
         }
 
         private boolean makeAGuess() {

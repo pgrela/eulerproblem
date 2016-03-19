@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ClassFactory {
 
+        @SuppressWarnings(value="Unchecked cast")
         public static<T> T getObjectOf(Class<T> clazz) {
             Constructor<?> constructor;
             try {

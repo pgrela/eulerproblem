@@ -93,6 +93,10 @@ public class Maths {
         return (int) Math.sqrt(n);
     }
 
+    public static int intSqrt(long n) {
+        return (int) Math.sqrt(n);
+    }
+
     public static boolean isTriangleNumber(int n) {
         int k = (int) Math.sqrt(n * 2);
         return n == k * (k + 1) / 2;

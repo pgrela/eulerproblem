@@ -1,17 +1,18 @@
 package pgrela.eulerproblem.problem483;
 
-import static org.assertj.core.api.BDDAssertions.then;
-
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
+import static org.assertj.core.api.BDDAssertions.then;
 
 @RunWith(JUnitParamsRunner.class)
 public class RepeatedPermutationTest {
 
     @Test
+    @Ignore
     @Parameters({
             "3,5.166666667e0",
             "5,1.734166667e1",

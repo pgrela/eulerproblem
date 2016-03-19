@@ -20,7 +20,7 @@ public class PandigitalPrime implements EulerSolver {
     public long solve() {
         return rangeClosed(1, 9)
                 .mapToObj(k -> rangeClosed(1, k).boxed().collect(Collectors.toList()))
-                .flatMapToInt(digits-> getAllPermutations((List) digits))
+                .flatMapToInt(digits-> getAllPermutations((List<Integer>) digits))
                 .filter(Primes::isPrime).max().getAsInt();
     }
 }

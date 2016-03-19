@@ -1,10 +1,16 @@
 package pgrela.eulerproject.problem111
 
-import pgrela.eulerproblem.common.{SolutionRunner, EulerSolver}
+import java.util.stream.LongStream
 
-class Solution extends EulerSolver{
-  def main(args:Array[String]) ={
-    SolutionRunner.printSolution(classOf[Solution])
+import pgrela.eulerproblem.common.{Maths, Primes, SolutionRunner, EulerSolver}
+
+object Solution extends EulerSolver{
+  def main(args:Array[String]):Unit ={
+    SolutionRunner.printSolution(this)
   }
 
+  override def solve(): Long ={
+    val primes: Array[Int] = Primes.primes(100000).toArray
+      5
+  }
 }

@@ -33,10 +33,24 @@ public class Primes {
     }
 
     public static boolean isPrime(int n) {
-        int[] primes = getPrimesToFactorizeInteger();
+        return isPrime(n, getPrimesToFactorizeInteger());
+    }
+
+    public static boolean isPrime(int n, int[] primes) {
         if (n < primes[primes.length - 1])
             return getSetOfPrimesToFactorizeInteger().contains(n);
         for (int prime : primes) {
+            if (n % prime == 0) {
+                return false;
+            }
+            if (prime * prime > n) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static boolean isPrime(long n, long[] primes) {
+        for (long prime : primes) {
             if (n % prime == 0) {
                 return false;
             }
