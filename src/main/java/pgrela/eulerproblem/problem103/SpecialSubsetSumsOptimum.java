@@ -44,7 +44,7 @@ public class SpecialSubsetSumsOptimum implements EulerSolver {
         return (firstElement * 2 + numberOfElements - 1) * numberOfElements / 2;
     }
 
-    private boolean checkAllHalfSums(int[] array) {
+    public static boolean checkAllHalfSums(final int[] array) {
         int[] indices = new int[(array.length - 1) / 2];
         int sum = of(array).sum();
         range(0, indices.length).forEach(i -> indices[i] = i);
@@ -60,39 +60,32 @@ public class SpecialSubsetSumsOptimum implements EulerSolver {
         }
     }
 
-    private void incrementOrderedUniqueSet(int[] initial, int resetStart) {
+    private static void incrementOrderedUniqueSet(final int[] descriptor, int resetStart) {
         int elementToBump = 0;
-        while (elementToBump < initial.length - 1 && initial[elementToBump] + 1 == initial[elementToBump + 1]) {
+        while (elementToBump < descriptor.length - 1 && descriptor[elementToBump] + 1 == descriptor[elementToBump + 1]) {
             ++elementToBump;
         }
-        ++initial[elementToBump];
+        ++descriptor[elementToBump];
         for (int i = 0; i < elementToBump; i++) {
-            initial[i] = i + resetStart;
+            descriptor[i] = i + resetStart;
         }
     }
 
-    private boolean checkAllSubSums(int[] set) {
+    public static boolean checkAllSubSums(final int[] set) {
         Set<Integer> achievedSums = new HashSet<>();
-        return range(0, 1 << set.length).sequential().map(combinationDescriptor ->
-                range(0, set.length)
-                        .filter(maybeIncludedInSum -> (combinationDescriptor & (1 << maybeIncludedInSum)) != 0)
-                        .map(i -> set[i])
-                        .sum()
-        ).allMatch(achievedSums::add);
-        //this is much faster !!!
-//        for (int combinationDescriptor = 0; combinationDescriptor < 1 << set.length; combinationDescriptor++) {
-//            int s = 0;
-//            for (int maybeIncludedInSum = 0; maybeIncludedInSum < set.length; maybeIncludedInSum++) {
-//                if ((combinationDescriptor & (1 << maybeIncludedInSum)) != 0) {
-//                    s += set[maybeIncludedInSum];
-//                }
-//            }
-//            if (achievedSums.contains(s)) {
-//                return false;
-//            }
-//            achievedSums.add(s);
-//        }
-//        return true;
+        for (int combinationDescriptor = 0; combinationDescriptor < (1 << set.length); combinationDescriptor++) {
+            int s = 0;
+            for (int maybeIncludedInSum = 0; maybeIncludedInSum < set.length; maybeIncludedInSum++) {
+                if ((combinationDescriptor & (1 << maybeIncludedInSum)) != 0) {
+                    s += set[maybeIncludedInSum];
+                }
+            }
+            if (achievedSums.contains(s)) {
+                return false;
+            }
+            achievedSums.add(s);
+        }
+        return true;
     }
 
 }

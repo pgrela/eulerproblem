@@ -10,7 +10,7 @@ import static pgrela.eulerproblem.common.Primes.factorizeLikeInt;
 public class Maths {
 
     public static long newton(int n, int k) {
-        return factorial(k + 1, n) / factorial(k);
+        return factorial(k + 1, n) / factorial(n-k);
     }
 
     private static long factorial(int k, int n) {

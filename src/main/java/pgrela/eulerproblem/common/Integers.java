@@ -4,6 +4,7 @@ import java.util.stream.IntStream;
 
 public class Integers {
     public static final int ONE_MILLION = 1000000;
+    public static final int ONE_BILLION = 1000000000;
 
     public static int multiply(int a, int b) {
         return a * b;
