@@ -20,6 +20,7 @@ public class CountingBlockCombinationsII implements EulerSolver {
         long[] endsWithRed = new long[M * 100];
         IntStream.rangeClosed(1, M).forEach(i -> endsWithBlack[i] = 1);
         IntStream.range(1, M).forEach(i -> endsWithRed[i] = 0);
+        endsWithRed[M] = 1;
         for (int i = M + 1; i < M * 100; i++) {
             endsWithBlack[i] = endsWithBlack[i - 1] + endsWithRed[i - 1];
             endsWithRed[i] = endsWithRed[i - 1] + endsWithBlack[i - M];
