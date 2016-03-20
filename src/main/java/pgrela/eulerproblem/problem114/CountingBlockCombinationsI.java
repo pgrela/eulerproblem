@@ -13,7 +13,7 @@ public class CountingBlockCombinationsI implements EulerSolver {
     public long solve() {
         long[] endsWithBlack = new long[51];
         long[] endsWithRed = new long[51];
-        endsWithBlack[1] = 0;
+        endsWithBlack[0] = 0;
         endsWithBlack[1] = 1;
         endsWithBlack[2] = 1;
         endsWithBlack[3] = 1;
