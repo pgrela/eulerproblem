@@ -119,7 +119,7 @@ public class Primes {
         return factors.stream().mapToInt(i -> i);
     }
 
-    private static Map<Integer, Integer> getPrimeFactorsHistogram(int number, int[] primes) {
+    public static Map<Integer, Integer> getPrimeFactorsHistogram(int number, int[] primes) {
         Map<Integer, Integer> primesCount = new HashMap<>(10);
         for (int prime : primes) {
             int times = 0;

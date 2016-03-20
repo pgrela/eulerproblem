@@ -18,28 +18,8 @@ public class SpecialSubsetSumsMetaTesting implements EulerSolver {
     }
 
     protected long solveForSetSize(int size) {
-        int[] comparisonsForSubSetsOf = new int[size / 2 + 1];
-        for (int subsetSize = 2; subsetSize < comparisonsForSubSetsOf.length; subsetSize++) {
-            for (int combination = 1 << (subsetSize * 2 - 1); combination < 1 << (subsetSize * 2); combination++) {
-                int ones = 0;
-                int signum = 0;
-                boolean negative = false;
-                int combinationsCopy = combination;
-                while (combinationsCopy > 0) {
-                    ones += combinationsCopy & 1;
-                    signum += (combinationsCopy & 1) == (combination & 1) ? 1 : -1;
-                    if (signum < 0) {
-                        negative = true;
-                    }
-                    combinationsCopy >>= 1;
-                }
-                if (ones == subsetSize && negative) {
-                    comparisonsForSubSetsOf[subsetSize]++;
-                }
-            }
-        }
         return IntStream.rangeClosed(2, size / 2)
-                .mapToLong(subsetSize -> Maths.newton(size, subsetSize * 2) * comparisonsForSubSetsOf[subsetSize])
+                .mapToLong(subsetSize -> Maths.newton(size, subsetSize * 2) * Maths.newton(2*subsetSize-1,subsetSize-2))
                 .sum();
     }
 
