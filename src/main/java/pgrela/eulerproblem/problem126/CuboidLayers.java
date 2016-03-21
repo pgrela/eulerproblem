@@ -1,11 +1,10 @@
-package pgrela.eulerproblem.problem125;
-
-import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
-
-import java.util.Arrays;
-import java.util.TreeSet;
+package pgrela.eulerproblem.problem126;
 
 import pgrela.eulerproblem.common.EulerSolver;
+
+import java.util.*;
+
+import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
 
 public class CuboidLayers implements EulerSolver {
 
@@ -15,36 +14,47 @@ public class CuboidLayers implements EulerSolver {
 
     public long solve() {
         Cuboid seed = new Cuboid(1, 1, 1);
-        CuboidLayer seedLayer = new CuboidLayer(seed);
-        TreeSet<CuboidLayer> queue = new TreeSet<>();
-        queue.add(seedLayer);
+        PriorityQueue<CuboidLayer> queue = new PriorityQueue<>();
+        queue.add(new CuboidLayer(seed));
+        Set<Cuboid> cuboids = new HashSet<>();
+        cuboids.add(seed);
+
         while (true) {
-            CuboidLayer current = queue.pollFirst();
-            if (current.getLayer() == 0) {
-                for (Cuboid generated : current.getCuboid().expand()) {
+            long top = queue.peek().getLayerSize();
+            int peeked = 0;
+            while (queue.peek().getLayerSize() == top) {
+                takeIt(queue, cuboids);
+                ++peeked;
+            }
+            if (peeked == 1000) {
+                return top;
+            }
+        }
+    }
+
+    private void takeIt(PriorityQueue<CuboidLayer> queue, Set<Cuboid> cuboids) {
+        CuboidLayer current = queue.poll();
+        if (current.getLayer() == 0) {
+            for (Cuboid generated : current.getCuboid().expand()) {
+                if (cuboids.add(generated)) {
                     queue.add(new CuboidLayer(generated));
                 }
             }
-            if (current.layerSize > 200) {
-                return current.layerSize;
-            }
-            System.out.println(current.layerSize);
-
-            current.bumpLayer();
-            queue.add(current);
         }
 
+        current.bumpLayer();
+        queue.add(current);
     }
 
     private class Cuboid {
         long a, b, c;
 
         public Cuboid(long a, long b, long c) {
-            long[] ints = {a, b, c};
-            Arrays.sort(ints);
-            this.a = ints[0];
-            this.b = ints[1];
-            this.c = ints[2];
+            long[] dimensions = {a, b, c};
+            Arrays.sort(dimensions);
+            this.a = dimensions[0];
+            this.b = dimensions[1];
+            this.c = dimensions[2];
         }
 
         public long area() {
@@ -126,22 +136,6 @@ public class CuboidLayers implements EulerSolver {
         @Override
         public String toString() {
             return "CuboidLayer{" + "cuboid=" + cuboid + ", layer=" + layer + ", layerSize=" + layerSize + '}';
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            CuboidLayer that = (CuboidLayer) o;
-
-            return cuboid.equals(that.cuboid);
-
-        }
-
-        @Override
-        public int hashCode() {
-            return cuboid != null ? cuboid.hashCode() : 0;
         }
     }
 
