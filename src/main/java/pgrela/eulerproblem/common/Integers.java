@@ -3,8 +3,8 @@ package pgrela.eulerproblem.common;
 import java.util.stream.IntStream;
 
 public class Integers {
-    public static final int ONE_MILLION = 1000000;
-    public static final int ONE_BILLION = 1000000000;
+    public static final int ONE_MILLION = 1_000_000;
+    public static final int ONE_BILLION = 1_000_000_000;
 
     public static int multiply(int a, int b) {
         return a * b;
@@ -48,5 +48,20 @@ public class Integers {
             number /= 10;
         }
         return aDigits;
+    }
+
+    public static Pair extendedEuclidian(int a, int b) {
+        if(b==0) {
+            return Pair.pair(1, 0);
+        }
+        Pair pair = extendedEuclidian(b, a % b);
+        return Pair.pair(pair.b, pair.a - a / b * pair.b);
+    }
+    public static Pair extendedEuclidian2(int a, int b) {
+        if(b==0) {
+            return Pair.pair(1, 0);
+        }
+        Pair pair = extendedEuclidian(b, a % b);
+        return Pair.pair(pair.b, pair.a - a / b * pair.b);
     }
 }

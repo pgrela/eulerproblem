@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 public class Primes {
-    private static int[] primesUpTo100000 = null;
+    private volatile static int[] primesUpTo100000 = null;
     private static Set<Integer> primesSetUpTo100000 = null;
 
     public static IntStream primes(int maxPrime) {
@@ -20,7 +20,11 @@ public class Primes {
 
     public static int[] getPrimesToFactorizeUpTo100000() {
         if (primesUpTo100000 == null) {
-            primesUpTo100000 = primes(100000).toArray();
+            synchronized (Primes.class) {
+                if (primesSetUpTo100000 == null) {
+                    primesUpTo100000 = primes(100000).toArray();
+                }
+            }
         }
         return primesUpTo100000;
     }
@@ -49,6 +53,7 @@ public class Primes {
         }
         return false;
     }
+
     public static boolean isPrime(long n, long[] primes) {
         for (long prime : primes) {
             if (n % prime == 0) {
@@ -97,7 +102,7 @@ public class Primes {
         int sum = 1;
         for (Map.Entry<Integer, Integer> primeFactor : primesCount.entrySet()) {
             int factor = primeFactor.getKey();
-            sum += sum*factor * ((Maths.pow(factor, primeFactor.getValue()) - 1) / (factor - 1));
+            sum += sum * factor * ((Maths.pow(factor, primeFactor.getValue()) - 1) / (factor - 1));
         }
         return sum - number;
     }
@@ -127,7 +132,7 @@ public class Primes {
                 number /= prime;
                 ++times;
             }
-            if(times>0)
+            if (times > 0)
                 primesCount.put(prime, times);
             if (number == 1) {
                 break;
@@ -141,8 +146,12 @@ public class Primes {
     }
 
     public static LongStream allDivisors(long number) {
+        return allDivisors(number, getPrimesToFactorizeUpTo100000());
+    }
+
+    public static LongStream allDivisors(long number, int[] primes) {
         LongStream divisors = LongStream.of(1);
-        for (int prime : getPrimesToFactorizeUpTo100000()) {
+        for (int prime : primes) {
             int times = 0;
             while (number % prime == 0) {
                 number /= prime;

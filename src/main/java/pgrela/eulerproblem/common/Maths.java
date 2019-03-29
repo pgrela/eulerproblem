@@ -10,7 +10,8 @@ import static pgrela.eulerproblem.common.Primes.factorizeLikeInt;
 public class Maths {
 
     public static long newton(int n, int k) {
-        return factorial(k + 1, n) / factorial(n-k);
+        if (k < n - k) return newton(n, n - k);
+        return factorial(k + 1, n) / factorial(n - k);
     }
 
     private static long factorial(int k, int n) {
@@ -133,12 +134,17 @@ public class Maths {
         List<Integer> f = factorize(n);
         return n / f.stream().distinct().reduce(1, (a, b) -> a * b) * f.stream().distinct().sequential().map(i -> i - 1).reduce(1, (a, b) -> a * b);
     }
+
     public static int totientLikeInt(long n) {
         List<Integer> f = factorizeLikeInt(n);
-        return (int)(n / f.stream().distinct().reduce(1, (a, b) -> a * b) * f.stream().distinct().sequential().map(i -> i - 1).reduce(1, (a, b) -> a * b));
+        return (int) (n / f.stream().distinct().reduce(1, (a, b) -> a * b) * f.stream().distinct().sequential().map(i -> i - 1).reduce(1, (a, b) -> a * b));
     }
 
     public static long longSqrt(long n) {
         return (long) Math.sqrt(n);
+    }
+
+    public static boolean isCube(long n) {
+        return pow((long) Math.cbrt(n), 3) == n;
     }
 }

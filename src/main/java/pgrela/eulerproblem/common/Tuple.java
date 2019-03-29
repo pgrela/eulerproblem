@@ -1,10 +1,10 @@
 package pgrela.eulerproblem.common;
 
-public class Tuple<T, U> {
-    public T a;
-    public U b;
+public class Tuple<FIRST, SECOND> {
+    public FIRST a;
+    public SECOND b;
 
-    public Tuple(T a, U b) {
+    public Tuple(FIRST a, SECOND b) {
         this.a = a;
         this.b = b;
     }
