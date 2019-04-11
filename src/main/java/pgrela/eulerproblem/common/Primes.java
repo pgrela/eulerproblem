@@ -124,7 +124,11 @@ public class Primes {
         return factors.stream().mapToInt(i -> i);
     }
 
-    public static Map<Integer, Integer> getPrimeFactorsHistogram(int number, int[] primes) {
+    public static Map<Integer, Integer> getPrimeFactorsHistogram(long number) {
+        return getPrimeFactorsHistogram(number, getPrimesToFactorizeInteger());
+    }
+
+    public static Map<Integer, Integer> getPrimeFactorsHistogram(long number, int[] primes) {
         Map<Integer, Integer> primesCount = new HashMap<>(10);
         for (int prime : primes) {
             int times = 0;
@@ -138,7 +142,7 @@ public class Primes {
                 break;
             }
             if (prime * prime > number) {
-                primesCount.put(number, 1);
+                primesCount.put((int)number, 1);
                 break;
             }
         }
@@ -149,7 +153,7 @@ public class Primes {
         return allDivisors(number, getPrimesToFactorizeUpTo100000());
     }
 
-    public static LongStream allDivisors(long number, int[] primes) {
+    public static LongStream allDivisors(long number, int... primes) {
         LongStream divisors = LongStream.of(1);
         for (int prime : primes) {
             int times = 0;

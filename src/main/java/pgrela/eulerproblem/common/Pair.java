@@ -1,5 +1,8 @@
 package pgrela.eulerproblem.common;
 
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 public class Pair {
     public int a, b;
 
@@ -11,6 +14,7 @@ public class Pair {
     public static Pair pair(int a, int b) {
         return new Pair(a, b);
     }
+
     @Override
     public String toString() {
         return "[" + a + "," + b + "]";
@@ -34,5 +38,11 @@ public class Pair {
         int result = a;
         result = 31 * result + b;
         return result;
+    }
+
+    public static Stream<Pair> pairs(int aMin, int bMin, int aMax, int bMax) {
+        return IntStream.rangeClosed(aMin, aMax)
+                .boxed()
+                .flatMap(a -> IntStream.rangeClosed(bMin, bMax).mapToObj(b -> pair(a, b)));
     }
 }

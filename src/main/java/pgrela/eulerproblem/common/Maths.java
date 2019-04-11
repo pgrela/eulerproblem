@@ -147,4 +147,13 @@ public class Maths {
     public static boolean isCube(long n) {
         return pow((long) Math.cbrt(n), 3) == n;
     }
+
+    public static int log(long base, long n) {
+        int r=0;
+        while(n>=base){
+            n/=base;
+            ++r;
+        }
+        return r;
+    }
 }

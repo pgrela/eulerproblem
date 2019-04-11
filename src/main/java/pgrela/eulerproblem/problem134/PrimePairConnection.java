@@ -48,6 +48,7 @@ public class PrimePairConnection implements EulerSolver {
             y = x - a / b * y;
             x = pom;
         }
+        return Pair.pair(x, y);
     }
 
 }

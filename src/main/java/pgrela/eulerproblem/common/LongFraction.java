@@ -28,10 +28,10 @@ public class LongFraction {
             nominator *= -1;
             denominator *= -1;
         }
-        long gcd = Maths.gcd(nominator, denominator);
+        long gcd = Math.abs(Maths.gcd(nominator, denominator));
         this.nominator = nominator / gcd;
         this.denominator = denominator / gcd;
-        c=ahashCode();
+        c = ahashCode();
     }
 
     public LongFraction add(LongFraction other) {
@@ -55,10 +55,14 @@ public class LongFraction {
         return multiply(other.inverse());
     }
 
+    public LongFraction divide(long n) {
+        return divide(natural(n));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        //if (!(o instanceof LongFraction)) return false;
+        if (!(o instanceof LongFraction)) return false;
 
         LongFraction that = (LongFraction) o;
 
@@ -70,6 +74,7 @@ public class LongFraction {
     public int hashCode() {
         return c;
     }
+
     public int ahashCode() {
         int result = (int) (nominator ^ (nominator >>> 32));
         result = 31 * result + (int) (denominator ^ (denominator >>> 32));
@@ -78,6 +83,30 @@ public class LongFraction {
 
     @Override
     public String toString() {
-        return "{" + nominator + "/" + denominator + '}';
+        return "{" + nominator + "/" + denominator + " ~ " + (nominator * 1. / denominator) + '}';
+    }
+
+    public static LongFraction natural(long c) {
+        return new LongFraction(c, 1);
+    }
+
+    public LongFraction multiply(long n) {
+        return multiply(natural(n));
+    }
+
+    public boolean isLessThan(long n) {
+        if (n == 0) return nominator * denominator < 0;
+        long gcd = Math.abs(Maths.gcd(nominator, n));
+        return nominator / gcd < denominator * (n / gcd);
+    }
+
+    public boolean isGreaterThan(long n) {
+        if (n == 0) return nominator * denominator > 0;
+        long gcd = Math.abs(Maths.gcd(nominator, n));
+        return nominator / gcd > denominator * (n / gcd);
+    }
+
+    public LongFraction add(long n) {
+        return add(natural(n));
     }
 }
