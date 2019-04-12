@@ -1,5 +1,6 @@
 package pgrela.eulerproblem.common;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Spliterator;
@@ -84,5 +85,9 @@ public class Streams {
 
     public static <T> Stream<T> stream(Iterator<T> iterator) {
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
+    }
+
+    public static <FIRST, SECOND> Stream<Tuple<FIRST, SECOND>> cartessian(FIRST[] firsts, SECOND[] seconds) {
+        return Arrays.stream(firsts).flatMap(f->Arrays.stream(seconds).map(s->Tuple.tuple(f,s)));
     }
 }

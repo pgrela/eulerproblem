@@ -98,6 +98,14 @@ public class Maths {
         return (int) Math.sqrt(n);
     }
 
+    public static long intRoot(long n, int degree) {
+        return Math.round(Math.pow(n, 1. / degree));
+    }
+
+    public static boolean isPow(long n, int exponent) {
+        return pow(intRoot(n, exponent), exponent) == n;
+    }
+
     public static boolean isTriangleNumber(int n) {
         int k = (int) Math.sqrt(n * 2);
         return n == k * (k + 1) / 2;

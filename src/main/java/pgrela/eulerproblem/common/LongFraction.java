@@ -59,6 +59,25 @@ public class LongFraction {
         return divide(natural(n));
     }
 
+    public boolean isPow(int degree) {
+        return Maths.isPow(nominator, Math.abs(degree)) && Maths.isPow(denominator, Math.abs(degree));
+    }
+
+    public LongFraction root(int degree) {
+        if(degree < 0) return inverse().root(-degree);
+        return new LongFraction(Maths.intRoot(nominator, degree), Maths.intRoot(denominator, degree));
+    }
+
+    public boolean isSqrt() {
+        long nominatorSqrt = Maths.intSqrt(nominator);
+        long denominatorSqrt = Maths.intSqrt(denominator);
+        return nominatorSqrt * nominatorSqrt == nominator && denominatorSqrt * denominatorSqrt == denominator;
+    }
+
+    public LongFraction sqrt() {
+        return new LongFraction(Maths.longSqrt(nominator), Maths.longSqrt(denominator));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,5 +127,17 @@ public class LongFraction {
 
     public LongFraction add(long n) {
         return add(natural(n));
+    }
+
+    public LongFraction pow(int exponent) {
+        if (exponent == 0)
+            return this.equals(ZERO) ? ZERO : ONE;
+        long nominatorPowered = Maths.pow(nominator, Math.abs(exponent));
+        long denominatorPowered = Maths.pow(denominator, Math.abs(exponent));
+        if (exponent < 0) {
+            return new LongFraction(denominatorPowered, nominatorPowered);
+        } else {
+            return new LongFraction(nominatorPowered, denominatorPowered);
+        }
     }
 }

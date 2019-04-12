@@ -11,7 +11,7 @@ import static pgrela.eulerproblem.common.SolutionRunner.printSolution;
 
 public class IntegerAngledQuadrilaterals implements EulerSolver {
 
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args) {
         printSolution(IntegerAngledQuadrilaterals.class);
     }
 
