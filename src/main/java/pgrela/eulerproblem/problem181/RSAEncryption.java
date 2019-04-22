@@ -19,8 +19,8 @@ public class RSAEncryption implements EulerSolver {
     @Override
     public long solve() {
         System.out.println(Maths.gcd(1008,3642));
-        int p = 13;
-        int q = 17;
+        int p = 37;
+        int q = 19;
         int n = p * q;
         int phi = (p - 1) * (q - 1);
         int[] unconcealed = new int[n];
@@ -38,27 +38,36 @@ public class RSAEncryption implements EulerSolver {
                 }
             }
         }
-        for (int i = 0; i < phi; i++) {
-            if (unconcealed[i] == 0) continue;
-            System.out.print(i+":  \t");
-            for (int j = 0; j < n; j++) {
-                System.out.print(uc[i][j]==1?'#':'.');
+        for (int e = 0; e < phi; e++) {
+            if (unconcealed[e] == 0) continue;
+            System.out.print(e+":  \t");
+            for (int m = 0; m < n; m++) {
+                System.out.print(uc[e][m]==1?'#':'.');
             }
-            System.out.println(" " + unconcealed[i]);
+            System.out.println(" " + unconcealed[e]);
         }
         System.out.println(Arrays.stream(unconcealed).filter(i -> i != 0).min().getAsInt());
-        for (int i = 0; i < unconcealed.length; i++) {
-            if (unconcealed[i] == 0) continue;
-            //if (unconcealed[i] != 9) continue;
+        for (int e = 0; e < unconcealed.length; e++) {
+            if (unconcealed[e] == 0) continue;
+            //if (unconcealed[e] != 9) continue;
             System.out.println(String.format("%d -> %d, tot=%d, ee(e,phi)=%s, ee(e,n)=%s, ee(e,p)=%s, ee(e,q)=%s %s",
-                    i, unconcealed[i], Maths.totient(i),
-                    Integers.extendedEuclidian(i, phi),
-                    Integers.extendedEuclidian(i, n),
-                    Integers.extendedEuclidian(i, p),
-                    Integers.extendedEuclidian(i, q),
-                    Primes.isPrime(i)));
+                    e, unconcealed[e], Maths.totient(e),
+                    Integers.extendedEuclidian(e, phi),
+                    Integers.extendedEuclidian(e, n),
+                    Integers.extendedEuclidian(e, p),
+                    Integers.extendedEuclidian(e, q),
+                    Primes.isPrime(e)));
+        }
+        for (int m = 2; m < phi; m++) {
+            System.out.println(String.format("%d\t: %d", m, cycle(m,n)));
         }
         return 0;
+    }
+
+    private Object cycle(int m, int n) {
+        int e=2;
+        while(Maths.powMod(m,e,n)!=m)++e;
+        return e;
     }
 
 }
