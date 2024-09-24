@@ -1,11 +1,15 @@
 package pgrela.eulerproblem.common;
 
-public class LongFraction {
+import pgrela.eulerproblem.common.geometry.LongRectangle;
+
+public class LongFraction implements Comparable<LongFraction> {
     public static final LongFraction ONE = new LongFraction(1, 1);
     public static final LongFraction ZERO = new LongFraction(0, 1);
     public static final LongFraction MINUS_ONE = new LongFraction(-1, 1);
-    private long nominator;
-    private int c;
+    private final long nominator;
+    private final long denominator;
+    private final int c;
+
 
     public long getNominator() {
         return nominator;
@@ -14,8 +18,6 @@ public class LongFraction {
     public long getDenominator() {
         return denominator;
     }
-
-    private long denominator;
 
     public LongFraction(long nominator, long denominator) {
         if (denominator == 0) {
@@ -39,8 +41,14 @@ public class LongFraction {
         return new LongFraction(nominator * (lcm / denominator) + other.nominator * (lcm / other.denominator), lcm);
     }
 
-    public LongFraction multiply(LongFraction other) {
+    private LongFraction multiplyInternal(LongFraction other) {
         return new LongFraction(nominator * other.nominator, denominator * other.denominator);
+    }
+
+    public LongFraction multiply(LongFraction other) {
+        long gcdND = Maths.gcd(nominator, other.denominator);
+        long gcdDN = Maths.gcd(denominator, other.nominator);
+        return new LongFraction((nominator / gcdND) * (other.nominator / gcdDN), denominator / gcdDN * (other.denominator / gcdND));
     }
 
     public LongFraction inverse() {
@@ -48,11 +56,11 @@ public class LongFraction {
     }
 
     public LongFraction substract(LongFraction other) {
-        return add(other.multiply(MINUS_ONE));
+        return add(other.multiplyInternal(MINUS_ONE));
     }
 
     public LongFraction divide(LongFraction other) {
-        return multiply(other.inverse());
+        return multiplyInternal(other.inverse());
     }
 
     public LongFraction divide(long n) {
@@ -64,7 +72,7 @@ public class LongFraction {
     }
 
     public LongFraction root(int degree) {
-        if(degree < 0) return inverse().root(-degree);
+        if (degree < 0) return inverse().root(-degree);
         return new LongFraction(Maths.intRoot(nominator, degree), Maths.intRoot(denominator, degree));
     }
 
@@ -100,9 +108,14 @@ public class LongFraction {
         return result;
     }
 
+    //@Override
+    public String totString() {
+        return "{" + nominator + "/" + denominator + " ~ " + (nominator * 1. / denominator) + '}';
+    }
+
     @Override
     public String toString() {
-        return "{" + nominator + "/" + denominator + " ~ " + (nominator * 1. / denominator) + '}';
+        return "{" + nominator + "/" + denominator + '}';
     }
 
     public static LongFraction natural(long c) {
@@ -114,7 +127,7 @@ public class LongFraction {
     }
 
     public boolean isLessThan(long n) {
-        if (n == 0) return nominator * denominator < 0;
+        if (n == 0) return Math.signum(nominator) * Math.signum(denominator) < 0;
         long gcd = Math.abs(Maths.gcd(nominator, n));
         return nominator / gcd < denominator * (n / gcd);
     }
@@ -130,14 +143,28 @@ public class LongFraction {
     }
 
     public LongFraction pow(int exponent) {
-        if (exponent == 0)
-            return this.equals(ZERO) ? ZERO : ONE;
-        long nominatorPowered = Maths.pow(nominator, Math.abs(exponent));
-        long denominatorPowered = Maths.pow(denominator, Math.abs(exponent));
-        if (exponent < 0) {
-            return new LongFraction(denominatorPowered, nominatorPowered);
-        } else {
-            return new LongFraction(nominatorPowered, denominatorPowered);
+        if (exponent == 0) {
+            if (this.equals(ZERO)) {
+                throw new IllegalArgumentException("Zero to zero");
+            }
+            return ONE;
         }
+        if (exponent < 0) {
+            return inverse().pow(-exponent);
+        }
+        return new LongFraction(Maths.pow(nominator, exponent), Maths.pow(denominator, exponent));
+    }
+
+    @Override
+    public int compareTo(LongFraction o) {
+        return Long.compare(this.nominator * o.denominator, o.nominator * this.denominator);
+    }
+
+    public double asDouble() {
+        return nominator / (double) denominator;
+    }
+
+    public boolean isLessThan(LongFraction other) {
+        return LongRectangle.rectangle(nominator, other.denominator).isSmallerThan(LongRectangle.rectangle(other.nominator, denominator));
     }
 }

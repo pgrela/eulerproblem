@@ -32,4 +32,26 @@ public class LongFractionTest {
         Assertions.assertThat(powedAndRooted).isEqualTo(fraction);
     }
 
+    @Test
+    @Parameters(
+            {
+                    "2,3,5,6,true",
+                    "2,3,5,6,true",
+                    "1,1,2,1,true",
+                    "0,2,0,1,false",
+                    "3,10,2,7,false",
+            }
+    )
+    public void shouldIndicateSmaller(int nominator, int denominator, int otherNominator, int otherDenominator, boolean otherIsBigger) {
+        // given
+        LongFraction fraction = new LongFraction(nominator, denominator);
+        LongFraction bigger = new LongFraction(otherNominator, otherDenominator);
+
+        // when
+        boolean lessThanOther = fraction.isLessThan(bigger);
+
+        // then
+        Assertions.assertThat(lessThanOther).isEqualTo(otherIsBigger);
+    }
+
 }

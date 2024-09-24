@@ -1,6 +1,8 @@
 package pgrela.eulerproblem.common;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 import static pgrela.eulerproblem.common.Longs.safalyMultiplyModulo;
@@ -12,6 +14,24 @@ public class Maths {
     public static long newton(int n, int k) {
         if (k < n - k) return newton(n, n - k);
         return factorial(k + 1, n) / factorial(n - k);
+    }
+
+    public static long newtonModulo(int n, int k, long modulo) {
+        if (k < n - k) return newtonModulo(n, n - k, modulo);
+        int[] nominator = IntStream.rangeClosed(k + 1, n).toArray();
+        for (int i = 2; i <= n - k; i++) {
+            int j = i;
+            int l = 0;
+            while (j > 1) {
+                int gcd = gcd(nominator[l], j);
+                if (gcd > 1) {
+                    j /= gcd;
+                    nominator[l] /= gcd;
+                }
+                ++l;
+            }
+        }
+        return Arrays.stream(nominator).mapToLong(i -> i).reduce(1L, (a, b) -> a * b % modulo);
     }
 
     private static long factorial(int k, int n) {
@@ -134,6 +154,10 @@ public class Maths {
         return (a / Maths.gcd(a, b)) * b;
     }
 
+    public static int lcm(int a, int b) {
+        return (a / Maths.gcd(a, b)) * b;
+    }
+
     public static boolean isSquare(long n) {
         return pow((long) Math.sqrt(n), 2) == n;
     }
@@ -157,11 +181,15 @@ public class Maths {
     }
 
     public static int log(long base, long n) {
-        int r=0;
-        while(n>=base){
-            n/=base;
+        int r = 0;
+        while (n >= base) {
+            n /= base;
             ++r;
         }
         return r;
+    }
+
+    public static long gcd(long a, long b, long c) {
+        return gcd(a,gcd(b,c));
     }
 }

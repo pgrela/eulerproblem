@@ -27,4 +27,17 @@ public class MathsTest {
         Assertions.assertThat(Maths.isPow(n, exponent)).isEqualTo(isPow);
     }
 
+    @Test
+    public void shouldComputeNewtonModulo() {
+        long newtonModulo = Maths.newtonModulo(75, 25, 100_000_000);
+
+        Assertions.assertThat(newtonModulo).isEqualTo(48893628L);
+    }
+
+    @Test
+    public void shouldComputeNewtonModulo2() {
+        long newtonModulo = Maths.newtonModulo(75, 50, 100_000_000);
+
+        Assertions.assertThat(newtonModulo).isEqualTo(48893628L);
+    }
 }
