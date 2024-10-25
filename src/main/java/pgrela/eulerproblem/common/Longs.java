@@ -65,4 +65,40 @@ public class Longs {
         } while ((n >>= 1) > 0);
         return positive;
     }
+
+    public static int binaryLength(long n) {
+        int k = 0;
+        while (n > 0) {
+            ++k;
+            n /= 2;
+        }
+        return k;
+    }
+
+    public static long sqrt(long n) {
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+        if (n >= (1L << 62)) {
+            throw new IllegalArgumentException("Squares of numbers from " + (1 << 31) + " to " + 3037000499L + " are not allowed but you are welcome to add support for them.");
+        }
+        long digit = 1;
+        while ((digit) * (digit) <= n) digit <<= 1;
+        digit >>= 1;
+        long root = digit;
+        digit >>= 1;
+        while (digit > 0) {
+            if (n >= (root | digit) * (root | digit))
+                root |= digit;
+            digit >>= 1;
+        }
+        if(n<(root)*(root) || (root+1)*(root+1)<=n){
+            throw new RuntimeException();
+        }
+        return root;
+    }
+
+    public static boolean isPerfectSquare(long n) {
+        long sqrt = sqrt(n);
+        return sqrt * sqrt == n;
+    }
 }

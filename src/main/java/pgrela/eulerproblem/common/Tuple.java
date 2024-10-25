@@ -9,6 +9,14 @@ public class Tuple<FIRST, SECOND> {
         this.b = b;
     }
 
+    public FIRST first() {
+        return a;
+    }
+
+    public SECOND second() {
+        return b;
+    }
+
     public static <T,U> Tuple<T,U> tuple(T a, U b) {
         return new Tuple<>(a, b);
     }

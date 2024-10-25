@@ -63,7 +63,7 @@ public class Primes {
                 return true;
             }
         }
-        return false;
+        throw new RuntimeException();
     }
 
     private static Set<Integer> getSetOfPrimesToFactorizeInteger() {
@@ -155,7 +155,13 @@ public class Primes {
 
     public static LongStream allDivisors(long number, int... primes) {
         LongStream divisors = LongStream.of(1);
+        if(number==1)return divisors;
         for (int prime : primes) {
+            if(prime*(long)prime>number){
+                long primeItself = number;
+                divisors = divisors.flatMap(i -> LongStream.rangeClosed(0, 1).map(e -> i * Maths.pow(primeItself, e)));
+                break;
+            }
             int times = 0;
             while (number % prime == 0) {
                 number /= prime;

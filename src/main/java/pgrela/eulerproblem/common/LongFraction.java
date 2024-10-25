@@ -103,19 +103,14 @@ public class LongFraction implements Comparable<LongFraction> {
     }
 
     public int ahashCode() {
-        int result = (int) (nominator ^ (nominator >>> 32));
-        result = 31 * result + (int) (denominator ^ (denominator >>> 32));
+        int result = Long.hashCode(nominator);
+        result = 31 * result + Long.hashCode(denominator);
         return result;
-    }
-
-    //@Override
-    public String totString() {
-        return "{" + nominator + "/" + denominator + " ~ " + (nominator * 1. / denominator) + '}';
     }
 
     @Override
     public String toString() {
-        return "{" + nominator + "/" + denominator + '}';
+        return "{" + nominator + "/" + denominator + " ~ " + (nominator * 1. / denominator) + '}';
     }
 
     public static LongFraction natural(long c) {

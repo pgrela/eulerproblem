@@ -20,4 +20,9 @@ public class PythagoreanTriangle extends Triangle {
     public String toString() {
         return "{" + m + "," + n + ",*" + k + "} -> " + super.toString();
     }
+
+    public static PythagoreanTriangle triangle(long m, long n) {
+        if (m < n) return new PythagoreanTriangle(n, m);
+        return new PythagoreanTriangle(m, n);
+    }
 }

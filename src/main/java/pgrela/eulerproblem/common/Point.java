@@ -39,4 +39,8 @@ public class Point {
     public static Stream<Point> points(int xMin, int yMin, int xMax, int yMax) {
         return Pair.pairs(xMin, yMin, xMax, yMax).map(p -> new Point(p.a, p.b));
     }
+
+    public Point add(Point other){
+        return new Point(x + other.x, y + other.y);
+    }
 }

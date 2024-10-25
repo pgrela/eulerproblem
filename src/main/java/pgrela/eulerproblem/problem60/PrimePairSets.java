@@ -48,7 +48,7 @@ public class PrimePairSets implements EulerSolver {
         if (P.isEmpty() && X.isEmpty())
             return Stream.of(R);
         Set<Integer> PCopy = new TreeSet<>(P);
-        Stream r = Stream.of();
+        Stream<Set<Integer>> r = Stream.of();
         for (Integer v : PCopy) {
             R.add(v);
             r = Stream.concat(r,BronKerbosch1(

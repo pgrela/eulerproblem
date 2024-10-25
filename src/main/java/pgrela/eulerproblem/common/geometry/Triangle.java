@@ -13,7 +13,6 @@ public class Triangle {
         return a + b + c;
     }
 
-
     @Override
     public String toString() {
         return "{" + a + "," + b + "," + c + '}';

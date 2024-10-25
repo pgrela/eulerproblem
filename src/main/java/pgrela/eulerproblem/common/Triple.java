@@ -20,6 +20,18 @@ public class Triple<FIRST, SECOND, THIRD> {
         return new Triple<>(tuple.a, tuple.b, c);
     }
 
+    public FIRST first() {
+        return a;
+    }
+
+    public SECOND second() {
+        return b;
+    }
+
+    public THIRD third() {
+        return c;
+    }
+
     @Override
     public String toString() {
         return "[" + a + "," + b + "," + c + "]";
